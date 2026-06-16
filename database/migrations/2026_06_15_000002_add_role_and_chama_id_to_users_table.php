@@ -19,6 +19,22 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'chama_id')) {
                 $table->foreignId('chama_id')->nullable()->after('role')->constrained()->nullOnDelete();
             }
+
+            if (!Schema::hasColumn('users', 'national_id')) {
+                $table->string('national_id')->nullable()->after('email');
+            }
+
+            if (!Schema::hasColumn('users', 'phone')) {
+                $table->string('phone')->nullable()->after('national_id');
+            }
+
+            if (!Schema::hasColumn('users', 'is_verified')) {
+                $table->boolean('is_verified')->default(false)->after('phone');
+            }
+
+            if (!Schema::hasColumn('users', 'account_status')) {
+                $table->string('account_status')->default('active')->after('is_verified');
+            }
         });
     }
 
@@ -34,6 +50,22 @@ return new class extends Migration
 
             if (Schema::hasColumn('users', 'role')) {
                 $table->dropColumn('role');
+            }
+
+            if (Schema::hasColumn('users', 'national_id')) {
+                $table->dropColumn('national_id');
+            }
+
+            if (Schema::hasColumn('users', 'phone')) {
+                $table->dropColumn('phone');
+            }
+
+            if (Schema::hasColumn('users', 'is_verified')) {
+                $table->dropColumn('is_verified');
+            }
+
+            if (Schema::hasColumn('users', 'account_status')) {
+                $table->dropColumn('account_status');
             }
         });
     }

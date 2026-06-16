@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->text('description')->nullable();
             $table->string('currency', 3)->default('KES');
+            $table->decimal('contribution_target', 10, 2)->default(0.00);
+            $table->date('collection_cutoff')->nullable();
+            $table->decimal('late_penalty_flat', 10, 2)->default(0.00);
+            $table->decimal('interest_rate_pct', 5, 2)->default(0.00);
+            $table->decimal('min_credit_score', 3, 1)->default(1.0);
+            $table->decimal('savings_weight', 3, 2)->default(0.40);
+            $table->decimal('attendance_weight', 3, 2)->default(0.20);
+            $table->decimal('repayment_weight', 3, 2)->default(0.40);
             $table->timestamps();
         });
     }
