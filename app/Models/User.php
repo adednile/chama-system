@@ -19,11 +19,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'chama_id',
+        'name', 'email', 'password', 'role', 'chama_id',
+    'national_id', 'phone', 'is_verified', 'account_status'
     ];
 
     /**
@@ -50,7 +47,40 @@ class User extends Authenticatable
     }
 
     public function chama()
-    {
-        return $this->belongsTo(Chama::class);
-    }
+{
+    return $this->belongsTo(Chama::class);
+}
+
+public function contributions()
+{
+    return $this->hasMany(Contribution::class);
+}
+
+public function loans()
+{
+    return $this->hasMany(Loan::class);
+}
+
+public function fines()
+{
+    return $this->hasMany(Fine::class);
+}
+
+public function transactions()
+{
+    return $this->hasMany(Transaction::class);
+}
+
+public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
+
+public function meetings()
+{
+    return $this->belongsToMany(Meeting::class, 'attendances')
+                ->wherePivot('present', true);
+}
+
+
 }
