@@ -19,6 +19,11 @@ class Loan extends Model
         'reason',
         'approved_at',
         'repaid_at',
+        'credit_score',
+        'rejection_reason',
+        'outstanding_balance',
+        'maturity_date',
+        'approved_by',
     ];
 
     protected $casts = [
@@ -43,4 +48,10 @@ class Loan extends Model
     {
         return $this->hasMany(Repayment::class);
     }
+
+    public function amortizationSchedule(): HasMany
+    {
+        return $this->hasMany(AmortizationSchedule::class);
+    }
 }
+

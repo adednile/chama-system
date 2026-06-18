@@ -16,6 +16,9 @@ class Fine extends Model
         'due_date',
         'paid_at',
         'description',
+        'billing_cycle',
+        'reference_id',
+        'reference_type',   // ✅ added
     ];
 
     protected $casts = [

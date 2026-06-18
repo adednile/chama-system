@@ -9,13 +9,17 @@ class Repayment extends Model
 {
     protected $fillable = [
         'loan_id',
-        'amount',
-        'paid_at',
+        'repayment_amount',   // ✅ correct
+        'repayment_date',     // ✅ correct
+        'remaining_balance',
+        'is_late',
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
-        'paid_at' => 'date',
+        'repayment_amount' => 'decimal:2',   // ✅ fixed
+        'repayment_date' => 'date',
+        'remaining_balance' => 'decimal:2',
+        'is_late' => 'boolean',
     ];
 
     public function loan(): BelongsTo
