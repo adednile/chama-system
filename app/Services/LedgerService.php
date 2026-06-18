@@ -40,4 +40,40 @@ class LedgerService
 
         return round((float) $credit - (float) $debit, 2);
     }
+
+    public function verifyLedgerIntegrity(int $chamaId): bool
+    {
+        // Total cash inflows from sub-systems: contributions + repayments + paid fines
+        $contributions = \App\Models\Contribution::where('chama_id', $chamaId)->sum('amount');
+        
+        $repayments = \App\Models\Repayment::whereHas('loan', function ($q) use ($chamaId) {
+            $q->where('chama_id', $chamaId);
+        })->sum('repayment_amount');
+
+        $finesPaid = \App\Models\Fine::where('chama_id', $chamaId)
+            ->where('status', 'paid')
+            ->sum('amount');
+
+        $inflows = $contributions + $repayments + $finesPaid;
+
+        // Total cash outflows: disbursed loans
+        $loansDisbursed = \App\Models\Loan::where('chama_id', $chamaId)
+            ->whereIn('status', ['active', 'completed'])
+            ->sum('amount');
+
+        $computedCashPool = $inflows - $loansDisbursed;
+
+        // Sum of cash movements recorded in transactions table
+        $creditTx = Transaction::where('chama_id', $chamaId)
+            ->whereIn('type', ['contribution', 'repayment', 'fine_paid'])
+            ->sum('amount');
+
+        $debitTx = Transaction::where('chama_id', $chamaId)
+            ->whereIn('type', ['loan_disbursement'])
+            ->sum('amount');
+
+        $variance = abs(($creditTx - $debitTx) - $computedCashPool);
+
+        return $variance < 0.01;
+    }
 }
