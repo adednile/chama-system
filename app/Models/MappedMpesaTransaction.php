@@ -16,6 +16,8 @@ class MappedMpesaTransaction extends Model
         'transaction_code',
         'message',
         'status',
+        'payment_type',
+        'loan_id',
     ];
 
     protected $casts = [
@@ -25,5 +27,10 @@ class MappedMpesaTransaction extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function loan(): BelongsTo
+    {
+        return $this->belongsTo(Loan::class);
     }
 }
