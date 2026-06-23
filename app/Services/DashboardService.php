@@ -15,6 +15,15 @@ class DashboardService
      */
     public function getTreasurerData(int $chamaId): array
     {
+        $members = \App\Models\User::where('chama_id', $chamaId)->where('role', 'member')->get();
+        $scoringEngine = new \App\Services\CreditScoringEngine();
+        $totalScore = 0;
+        $memberCount = $members->count();
+        foreach ($members as $member) {
+            $totalScore += $scoringEngine->calculateScore($member);
+        }
+        $averageScore = $memberCount > 0 ? $totalScore / $memberCount : 0;
+
         return [
             'totalSavings'       => Contribution::where('chama_id', $chamaId)->sum('amount'),
             'activeLoans'        => Loan::where('chama_id', $chamaId)->where('status', 'active')->sum('outstanding_balance'),
@@ -24,6 +33,7 @@ class DashboardService
             'totalFines'         => Fine::where('chama_id', $chamaId)->where('status', 'pending')->sum('amount'),
             'unpaidFinesCount'   => Fine::where('chama_id', $chamaId)->where('status', 'pending')->count(),
             'recentTransactions' => Transaction::where('chama_id', $chamaId)->with('user')->latest()->limit(20)->get(),
+            'averageCreditScore' => $averageScore,
         ];
     }
 

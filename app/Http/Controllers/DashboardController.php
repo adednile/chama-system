@@ -31,4 +31,10 @@ class DashboardController extends Controller
 
         return view('dashboard.member', $data);
     }
+
+    public function trustInfo(\Illuminate\Http\Request $request)
+    {
+        $tab = $request->query('tab', 'privacy');
+        return view('dashboard.trust', compact('tab'));
+    }
 }
