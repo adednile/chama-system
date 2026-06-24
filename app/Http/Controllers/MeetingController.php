@@ -251,4 +251,47 @@ class MeetingController extends Controller
 
         return redirect()->back()->with('success', 'Meeting cancelled successfully.');
     }
+
+    /**
+     * Export groups attendance history report for the meetings in the current financial year.
+     */
+    public function exportAttendance()
+    {
+        $chama = Auth::user()->chama;
+        $year = now()->year;
+        $financialYearStart = now()->startOfYear();
+        $financialYearEnd = now()->endOfYear();
+
+        $meetings = $chama->meetings()
+            ->whereBetween('meeting_date', [$financialYearStart, $financialYearEnd])
+            ->orderBy('meeting_date', 'asc')
+            ->get();
+
+        $members = $chama->users()->where('role', 'member')->orderBy('name', 'asc')->get();
+        $attendances = Attendance::whereIn('meeting_id', $meetings->pluck('id'))->get();
+
+        // Calculate average attendance % across these meetings
+        $totalMembers = $members->count();
+        $totalMeetingsWithAttendance = 0;
+        $sumAttendancePercentages = 0;
+
+        foreach ($meetings as $meeting) {
+            $totalAttendanceRecords = $attendances->where('meeting_id', $meeting->id)->count();
+            if ($totalAttendanceRecords > 0 && $totalMembers > 0) {
+                $presentCount = $attendances->where('meeting_id', $meeting->id)->where('present', true)->count();
+                $sumAttendancePercentages += ($presentCount / $totalMembers) * 100;
+                $totalMeetingsWithAttendance++;
+            }
+        }
+
+        $averageAttendance = $totalMeetingsWithAttendance > 0 
+            ? round($sumAttendancePercentages / $totalMeetingsWithAttendance, 1) 
+            : 0;
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.attendance', compact(
+            'chama', 'meetings', 'members', 'attendances', 'averageAttendance', 'year'
+        ));
+
+        return $pdf->download("attendance-report-{$year}.pdf");
+    }
 }
