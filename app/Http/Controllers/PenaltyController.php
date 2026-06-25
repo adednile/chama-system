@@ -37,12 +37,22 @@ class PenaltyController extends Controller
         // Check if user has other unpaid fines
         $user = $fine->user;
         if ($user) {
-            $unpaidFinesCount = $user->fines()->where('status', 'unpaid')->count();
+            $unpaidFinesCount = $user->fines()->where('status', 'pending')->count();
             if ($unpaidFinesCount === 0) {
                 $user->update(['account_status' => 'active']);
             }
         }
 
         return redirect()->back()->with('success', 'Fine marked as paid.');
+    }
+
+    public function memberFines()
+    {
+        $fines = Fine::query()
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('Member.fines', compact('fines'));
     }
 }
