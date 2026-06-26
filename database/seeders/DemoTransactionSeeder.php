@@ -236,7 +236,7 @@ class DemoTransactionSeeder extends Seeder
             'chama_id' => $chama->id,
             'amount' => 500.00,
             'type' => 'late_contribution',
-            'status' => 'unpaid',
+            'status' => 'pending',
             'due_date' => Carbon::now()->subMonths(1)->toDateString(),
             'description' => 'Unpaid penalty for late savings contribution',
         ]);
@@ -247,7 +247,7 @@ class DemoTransactionSeeder extends Seeder
             'chama_id' => $chama->id,
             'amount' => 150.00,
             'type' => 'missed_meeting',
-            'status' => 'unpaid',
+            'status' => 'pending',
             'due_date' => Carbon::now()->subMonths(1)->toDateString(),
             'description' => 'Penalty for missing Meeting 4',
         ]);
@@ -257,7 +257,7 @@ class DemoTransactionSeeder extends Seeder
             'chama_id' => $chama->id,
             'amount' => 150.00,
             'type' => 'missed_meeting',
-            'status' => 'unpaid',
+            'status' => 'pending',
             'due_date' => Carbon::now()->toDateString(),
             'description' => 'Penalty for missing Meeting 5',
         ]);

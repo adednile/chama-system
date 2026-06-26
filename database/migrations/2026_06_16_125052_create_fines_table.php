@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('chama_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
             $table->string('type');
-            $table->string('status')->default('unpaid');
+            $table->string('status')->default('pending');
             $table->date('due_date');
             $table->date('paid_at')->nullable();
             $table->text('description')->nullable();
