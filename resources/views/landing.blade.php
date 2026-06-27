@@ -18,18 +18,23 @@
                         primary: '#ffffff',
                         secondary: '#f8fafc',
                         gold: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            500: '#d97706',
-                            600: '#b45309',
-                            700: '#78350f',
+                            50: '#e5f0ff',
+                            100: '#cce0ff',
+                            200: '#99c2ff',
+                            300: '#66a3ff',
+                            400: '#3385ff',
+                            500: '#0066ff',
+                            600: '#0052cc',
+                            700: '#003d99',
+                            800: '#002966',
+                            900: '#001433',
+                            950: '#000e24',
                         },
                         brand: {
                             navy: '#f1f5f9',
                             dark: '#ffffff',
-                            gold: '#b45309',
-                            goldlight: '#d97706',
+                            gold: '#0052cc',
+                            goldlight: '#0066ff',
                             emerald: '#059669',
                             rose: '#e11d48',
                             slate: '#475569'
@@ -50,9 +55,15 @@
             color: #334155;
         }
         .hero-bg {
-            background: radial-gradient(circle at 70% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 60%),
-                        radial-gradient(circle at 10% 80%, rgba(5, 150, 105, 0.02) 0%, transparent 50%),
-                        #f1f5f9;
+            background: url('/images/hero-bg.png') no-repeat center center;
+            background-size: cover;
+        }
+        .glass-hero-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
         }
         .premium-card {
             background: #ffffff;
@@ -60,20 +71,20 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
         }
         .gold-gradient-text {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .gold-btn {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             color: #ffffff;
-            box-shadow: 0 4px 20px rgba(180, 83, 9, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .gold-btn:hover {
             transform: translateY(-2px);
             opacity: 0.95;
-            box-shadow: 0 6px 24px rgba(180, 83, 9, 0.3);
+            box-shadow: 0 6px 24px rgba(0, 102, 255, 0.3);
         }
         .pulse-emerald {
             animation: pulse-emerald-anim 2s infinite;
@@ -88,6 +99,24 @@
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
+        }
+        .fade-in-text {
+            animation: fadeInSlide 6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .fade-in-text-slow {
+            animation: fadeInSlide 10s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -129,16 +158,12 @@
     <section class="hero-bg min-h-screen flex items-center pt-24 overflow-hidden relative">
         <div class="max-w-7xl mx-auto px-6 py-20 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            <div class="lg:col-span-7">
-                <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-4 py-2 rounded-full text-xs font-semibold mb-6">
-                    <span class="w-2.5 h-2.5 bg-emerald-600 rounded-full pulse-emerald"></span>
-                    Smart Ledger System for Kenyan Chamas
-                </div>
+            <div class="lg:col-span-7 glass-hero-panel p-8 md:p-12 rounded-3xl">
                 <h1 class="text-4xl md:text-6xl font-title font-black text-slate-800 leading-[1.1] mb-6">
                     Wealth Building, <br>
                     <span class="gold-gradient-text">Automated &amp; Trusted.</span>
                 </h1>
-                <p class="text-lg text-slate-500 mb-8 max-w-xl leading-relaxed font-medium">
+                <p class="text-lg text-slate-500 mb-8 max-w-xl leading-relaxed font-medium fade-in-text">
                     Say goodbye to manual books, spreadsheets, and calculations. Automate your Chama’s ledger bookkeeping, credit scoring, late penalties, and M-Pesa SMS mapping.
                 </p>
                 
@@ -157,7 +182,7 @@
                     @endauth
                 </div>
 
-                <div class="mt-12 flex items-center gap-8">
+                <div class="mt-12 flex items-center gap-8 fade-in-text-slow">
                     <div class="flex -space-x-3">
                         <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center font-bold text-slate-600 text-xs">AM</div>
                         <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center font-bold text-slate-600 text-xs">KW</div>

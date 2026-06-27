@@ -109,14 +109,14 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
         }
         .auth-card-transition {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .form-input-focus:focus {
-            border-color: #d97706;
-            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+            border-color: #0066ff;
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
             outline: none;
         }
     </style>

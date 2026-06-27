@@ -66,23 +66,28 @@
                         "tertiary": "#006948",
                         "on-error-container": "#93000a",
                         "slate-custom": "#f1f5f9",
-                        "gold-gradient-start": "#d97706",
-                        "gold-gradient-end": "#b45309",
+                        "gold-gradient-start": "#0066ff",
+                        "gold-gradient-end": "#0052cc",
 
                         // Legacy compatibility tokens
                         gold: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            500: '#d97706',
-                            600: '#b45309',
-                            700: '#78350f',
+                            50: '#e5f0ff',
+                            100: '#cce0ff',
+                            200: '#99c2ff',
+                            300: '#66a3ff',
+                            400: '#3385ff',
+                            500: '#0066ff',
+                            600: '#0052cc',
+                            700: '#003d99',
+                            800: '#002966',
+                            900: '#001433',
+                            950: '#000e24',
                         },
                         brand: {
                             navy: '#f1f5f9',
                             dark: '#ffffff',
-                            gold: '#b45309',
-                            goldlight: '#d97706',
+                            gold: '#0052cc',
+                            goldlight: '#0066ff',
                             emerald: '#059669',
                             rose: '#e11d48',
                             slate: '#475569'
@@ -151,11 +156,11 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
         }
         .gold-glow:focus {
-            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
-            border-color: #d97706;
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+            border-color: #0066ff;
         }
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
@@ -171,7 +176,7 @@
             top: 15%;
             height: 70%;
             width: 3px;
-            background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(180deg, #0066ff 0%, #0052cc 100%);
             border-radius: 0 4px 4px 0;
             opacity: 0;
             transition: opacity 0.2s ease;
@@ -180,24 +185,24 @@
             opacity: 1;
         }
         .sidebar-link.active {
-            background: rgba(180, 83, 9, 0.08);
-            color: #b45309;
+            background: rgba(0, 82, 204, 0.08);
+            color: #0052cc;
             font-weight: 600;
         }
         .gold-gradient-text {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .gold-gradient-btn {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             color: #ffffff;
             transition: all 0.2s ease;
         }
         .gold-gradient-btn:hover {
             opacity: 0.95;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(180, 83, 9, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 82, 204, 0.2);
         }
         .gold-gradient-btn:active {
             transform: translateY(0);
