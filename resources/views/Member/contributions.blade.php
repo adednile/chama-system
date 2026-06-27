@@ -7,6 +7,11 @@
     {{-- Header --}}
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
+            <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+                <span class="material-symbols-outlined text-xs">chevron_right</span>
+                <span class="text-slate-800 font-medium">Financial Portal</span>
+            </nav>
             <h1 class="font-headline-lg text-headline-lg text-on-surface">Financial Portal</h1>
             <p class="font-body-md text-body-md text-secondary">View your contribution history and submit M-Pesa payments for verification.</p>
         </div>

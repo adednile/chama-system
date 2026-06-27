@@ -4,7 +4,7 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
-        <a href="{{ route('dashboard') }}" class="hover:text-primary transition-colors">Dashboard</a>
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
         <span class="text-slate-800 font-medium">Attendance Statement</span>
     </div>
@@ -124,7 +124,7 @@
                                         @if($attendance->meeting->meeting_type === 'regular')
                                             <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">Regular</span>
                                         @elseif($attendance->meeting->meeting_type === 'agm')
-                                            <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-100">AGM</span>
+                                            <span class="px-2 py-0.5 rounded-full bg-digital-blue-50 text-digital-blue-700 text-[10px] font-bold border border-digital-blue-200">AGM</span>
                                         @else
                                             <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold border border-rose-100">Special</span>
                                         @endif
