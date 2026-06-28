@@ -166,9 +166,9 @@
             </a>
             
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
+                <a href="#stats" class="hover:text-slate-800 transition">Impact</a>
                 <a href="#features" class="hover:text-slate-800 transition">Features</a>
                 <a href="#benefits" class="hover:text-slate-800 transition">Benefits</a>
-                <a href="#stats" class="hover:text-slate-800 transition">Impact</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -279,6 +279,127 @@
         </div>
     </section>
 
+    <!-- Impact Section -->
+    <section id="stats" class="py-24 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <!-- Text Content -->
+            <div class="lg:col-span-6 space-y-6">
+                <div>
+                    <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Our Impact</h2>
+                    <h3 class="text-xl font-black text-slate-800 tracking-tight leading-none mb-4">Mission: "Tujenge Pamoja."</h3>
+                    <p class="text-3xl font-title font-extrabold text-slate-800 leading-tight">Impact on Kenyan Chamas</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-base text-slate-600 leading-relaxed font-medium">
+                        Chama Gold aims to increase efficiency in Kenyan Chamas by replacing error-prone manual bookkeeping with a secure, centralized digital ledger.
+                    </p>
+                    <p class="text-base text-slate-600 leading-relaxed font-medium">
+                        It automates transaction logging via an M-Pesa SMS parser, de-biases credit allocation using objective 1–10 credit scoring, and enforces financial discipline through an automated penalty engine.
+                    </p>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-4 pt-4">
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="99.9" data-suffix="%">0%</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Accuracy</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="10" data-suffix="x">0x</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Speedup</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="0" data-suffix="">0</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Disputes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infographic Visual representation -->
+            <div class="lg:col-span-6">
+                <div class="premium-card feature-card p-6 md:p-8 rounded-3xl bg-white relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h4 class="font-title font-bold text-slate-800 text-lg">Chama Efficiency Trajectory</h4>
+                            <p class="text-xs text-slate-400 font-medium">Comparative analysis of manual vs. digital automation</p>
+                        </div>
+                        <span class="text-[10px] bg-emerald-50 border border-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">+75% Gain</span>
+                    </div>
+
+                    <!-- Line Chart Infographic (Pure CSS/SVG inline) -->
+                    <div class="relative w-full aspect-[4/3] min-h-[220px]">
+                        <svg class="w-full h-full" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#0066ff" stop-opacity="0.15"/>
+                                    <stop offset="100%" stop-color="#0066ff" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Horizontal Gridlines -->
+                            <line x1="50" y1="50" x2="450" y2="50" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="100" x2="450" y2="100" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="150" x2="450" y2="150" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="200" x2="450" y2="200" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="250" x2="450" y2="250" stroke="#e2e8f0" stroke-width="1.5" />
+
+                            <!-- Y-Axis Labels -->
+                            <text x="25" y="54" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">100%</text>
+                            <text x="25" y="104" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">80%</text>
+                            <text x="25" y="154" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">60%</text>
+                            <text x="25" y="204" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">40%</text>
+                            <text x="25" y="254" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">20%</text>
+
+                            <!-- X-Axis Labels -->
+                            <text x="50" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 1</text>
+                            <text x="150" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 2</text>
+                            <text x="250" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 3</text>
+                            <text x="350" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 4</text>
+                            <text x="450" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 5</text>
+
+                            <!-- Area shading -->
+                            <path d="M 50 200 L 150 170 Q 200 130, 250 80 L 350 60 L 450 45 L 450 250 L 50 250 Z" fill="url(#chartGradient)" />
+
+                            <!-- Manual ledger line -->
+                            <path d="M 50 220 L 150 215 C 190 215, 210 228, 250 210 L 350 220 L 450 205" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="4,4" />
+
+                            <!-- Chama Gold line -->
+                            <path d="M 50 200 L 150 170 Q 200 130, 250 80 L 350 60 L 450 45" fill="none" stroke="#0066ff" stroke-width="3.5" stroke-linecap="round" />
+
+                            <!-- Dot markers for Chama Gold -->
+                            <circle cx="50" cy="200" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="150" cy="170" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="250" cy="80" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="350" cy="60" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="450" cy="45" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+
+                            <!-- Dot markers for Manual -->
+                            <circle cx="50" cy="220" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="150" cy="215" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="250" cy="210" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="350" cy="220" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="450" cy="205" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                        </svg>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="flex justify-center gap-6 mt-4 text-[11px] font-bold text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-1.5 rounded-full bg-[#0066ff]"></span>
+                            <span>Chama Gold (Automated)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-0.5 bg-slate-400 border-t border-dashed border-slate-400"></span>
+                            <span>Traditional Chama (Manual)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section id="features" class="py-24 bg-white border-t border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6">
@@ -356,6 +477,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            function animateCounter(el) {
+                const target = parseFloat(el.getAttribute('data-target'));
+                const suffix = el.getAttribute('data-suffix') || '';
+                const isFloat = target % 1 !== 0;
+                let current = 0;
+                const duration = 1500; // 1.5 seconds animation duration
+                const start = performance.now();
+                
+                function update(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = progress * (2 - progress); // Ease out quad
+                    
+                    current = ease * target;
+                    
+                    if (isFloat) {
+                        el.textContent = current.toFixed(1) + suffix;
+                    } else {
+                        el.textContent = Math.floor(current) + suffix;
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    } else {
+                        if (isFloat) {
+                            el.textContent = target.toFixed(1) + suffix;
+                        } else {
+                            el.textContent = target + suffix;
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(update);
+            }
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
@@ -363,6 +519,11 @@
                         cards.forEach((card, index) => {
                             setTimeout(() => {
                                 card.classList.add('visible');
+                                // Trigger count up animation for children with data-target
+                                const counters = card.querySelectorAll('[data-target]');
+                                counters.forEach(counter => {
+                                    animateCounter(counter);
+                                });
                             }, index * 200);
                         });
                         observer.unobserve(entry.target);
@@ -370,7 +531,7 @@
                 });
             }, { threshold: 0.15 });
 
-            const targetSections = document.querySelectorAll('#features, #benefits');
+            const targetSections = document.querySelectorAll('#stats, #features, #benefits');
             targetSections.forEach(section => {
                 observer.observe(section);
             });
