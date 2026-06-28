@@ -16,8 +16,8 @@
 </head>
 <body>
     <div class="header">
-        <h2>Group Financial Report</h2>
-        <p><strong>Chama:</strong> {{ Auth::user()->chama->name ?? 'N/A' }}</p>
+        <h2>Chama Financial Report</h2>
+        <p><strong>{{ Auth::user()->chama->name ?? 'N/A' }}</strong></p>
         <p>Generated: {{ now()->format('d/m/Y H:i') }}</p>
     </div>
 
