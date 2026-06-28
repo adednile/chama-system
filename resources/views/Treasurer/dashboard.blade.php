@@ -23,9 +23,9 @@
             <div class="bg-white shadow rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4">Quick actions</h3>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('treasurer.sms-parser') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Parse SMS</a>
-                    <a href="{{ route('treasurer.penalties') }}" class="bg-amber-600 text-white px-4 py-2 rounded">Manage fines</a>
-                    <a href="{{ route('reports.treasurer') }}" class="bg-green-600 text-white px-4 py-2 rounded">Reports</a>
+                    <a href="{{ route('treasurer.sms-parser') }}" class="bg-digital-blue-600 hover:bg-digital-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Parse SMS</a>
+                    <a href="{{ route('treasurer.penalties') }}" class="bg-digital-blue-600 hover:bg-digital-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Manage fines</a>
+                    <a href="{{ route('reports.treasurer') }}" class="bg-digital-blue-600 hover:bg-digital-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">Reports</a>
                 </div>
             </div>
         </div>
