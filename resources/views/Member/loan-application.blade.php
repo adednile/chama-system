@@ -6,6 +6,11 @@
     <!-- Header -->
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
+            <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+                <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+                <span class="material-symbols-outlined text-xs">chevron_right</span>
+                <span class="text-slate-800 font-medium">Loan Facility</span>
+            </nav>
             <h1 class="font-headline-xl text-headline-xl text-on-background">Loan Facility</h1>
             <p class="text-on-surface-variant">Apply for a low-interest credit facility based on your Chama contributions.</p>
         </div>
@@ -188,7 +193,7 @@
                             @php
                                 $statusColors = [
                                     'active'    => 'bg-emerald-100 text-emerald-800 border-emerald-200',
-                                    'pending'   => 'bg-amber-100 text-amber-800 border-amber-200',
+                                    'pending'   => 'bg-digital-blue-50 text-digital-blue-800 border-digital-blue-200',
                                     'completed' => 'bg-slate-100 text-slate-700 border-slate-200',
                                     'rejected'  => 'bg-rose-100 text-rose-800 border-rose-200',
                                 ];
