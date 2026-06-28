@@ -231,10 +231,10 @@
 <aside class="h-screen w-64 fixed left-0 top-0 bg-white border-r border-slate-200 z-40 hidden md:flex flex-col py-6 px-4 shadow-sm">
     <div class="mb-8 px-3">
         <a href="/" class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md">G</div>
+            <div class="w-10 h-10 bg-gradient-to-br from-[#d97706] to-[#b45309] rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md">G</div>
             <div>
                 <h1 class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</h1>
-                <p class="text-[10px] text-gold-600 font-semibold tracking-widest uppercase mt-1">Wealth &amp; Trust</p>
+                <p class="text-[10px] text-[#b45309] font-semibold tracking-widest uppercase mt-1">Wealth &amp; Trust</p>
             </div>
         </a>
     </div>

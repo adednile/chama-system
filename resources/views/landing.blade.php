@@ -118,6 +118,38 @@
                 transform: translateY(0);
             }
         }
+        .feature-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.4s ease,
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease;
+        }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card:hover {
+            background-color: #e5f0ff !important;
+            border-color: #99c2ff !important;
+            box-shadow: 0 20px 40px -15px rgba(0, 102, 255, 0.12) !important;
+        }
+        .feature-card .feature-desc-wrap {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.3s ease-out,
+                        margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 0;
+        }
+        .feature-card:hover .feature-desc-wrap {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body class="font-sans antialiased selection:bg-gold-500/20 selection:text-gold-600">
@@ -126,17 +158,17 @@
     <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 transition-all">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">G</div>
+                <div class="w-10 h-10 bg-gradient-to-br from-[#d97706] to-[#b45309] rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">G</div>
                 <div>
                     <span class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</span>
-                    <p class="text-[9px] text-gold-600 font-bold tracking-widest uppercase mt-0.5">Wealth &amp; Trust</p>
+                    <p class="text-[9px] text-[#b45309] font-bold tracking-widest uppercase mt-0.5">Wealth &amp; Trust</p>
                 </div>
             </a>
             
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-                <a href="#features" class="hover:text-slate-800 transition">Platform Features</a>
-                <a href="#benefits" class="hover:text-slate-800 transition">Chama Benefits</a>
-                <a href="#stats" class="hover:text-slate-800 transition">Impact &amp; Security</a>
+                <a href="#features" class="hover:text-slate-800 transition">Features</a>
+                <a href="#benefits" class="hover:text-slate-800 transition">Benefits</a>
+                <a href="#stats" class="hover:text-slate-800 transition">Impact</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -251,31 +283,99 @@
     <section id="features" class="py-24 bg-white border-t border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-20">
-                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Complete System Features</h2>
-                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">Designed Specifically for the Needs of Kenyan Chamas</p>
+                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Core Features</h2>
+                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">Tailored for Kenyan Chamas</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">Centralized Digital Ledger</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Immutable transaction mapping logging all member contributions, repayments, and penalties. Zero-variance balance integrity matches computed pool totals.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Centralized Digital Ledger</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Track all member contributions and loans in real-time, eliminating manual calculation errors and resolving group financial disputes instantly</p>
+                    </div>
                 </div>
                 
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">sms</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">SMS M-Pesa Parser</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Paste raw Safaricom M-Pesa SMS confirmation messages. The engine auto-extracts the amount, sender, date, and reference code for rapid ledger mapping.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">SMS M-Pesa Parser</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Save your treasurer hours of manual entry by instantly turning copied transaction texts into complete financial ledger records.</p>
+                    </div>
                 </div>
 
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">credit_score</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">1-10 Credit Scoring Model</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Objective credit scoring calculated dynamically from savings consistency, repayment punctuality, and meeting attendance. Custom scoring weights.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">1-10 Credit Scoring Model</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Calculate fair, objective loan limits for your members instantly based on their actual savings habits and meeting attendance.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-24 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Chama Benefits</h2>
+                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">What do you stand to gain?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">error_outline</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Eliminate Manual Errors and Disputes</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Track group savings and loans automatically in real-time, completely replacing messy physical record books forever.</p>
+                    </div>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">schedule</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Save Administrative Time</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Reduce tedious data entry hours to seconds by instantly converting copied M-Pesa texts into records.</p>
+                    </div>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">gavel</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Ensure Fair and Objective Lending</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Remove favoritism completely by instantly calculating customized, objective loan limits using credit scoring data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const cards = entry.target.querySelectorAll('.feature-card');
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('visible');
+                            }, index * 200);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            const targetSections = document.querySelectorAll('#features, #benefits');
+            targetSections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 
 </body>
 </html>
