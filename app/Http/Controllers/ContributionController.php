@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contribution;
+use App\Models\Loan;
 use App\Models\MappedMpesaTransaction;
-use App\Models\Transaction;
-use App\Services\LedgerService;
 use App\Services\MpesaSMSParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +12,8 @@ class ContributionController extends Controller
 {
     public function index()
     {
-        $contributions = Contribution::query()
+        $contributions = \App\Models\Contribution::query()
+            ->where('user_id', Auth::id())
             ->where('chama_id', Auth::user()->chama_id)
             ->latest()
             ->get();
@@ -22,49 +21,70 @@ class ContributionController extends Controller
         return view('Member.contributions', compact('contributions'));
     }
 
-    public function store(Request $request, LedgerService $ledgerService)
+    public function parseSms(Request $request, MpesaSMSParser $parser)
     {
         $data = $request->validate([
-            'amount' => ['required', 'numeric', 'min:1'],
-            'contribution_date' => ['required', 'date'],
-            'reference' => ['nullable', 'string'],
-            'notes' => ['nullable', 'string'],
-        ]);
-
-        $contribution = Contribution::create([
-            'user_id' => Auth::id(),
-            'chama_id' => Auth::user()->chama_id,
-            'amount' => round((float) $data['amount'], 2),
-            'contribution_date' => $data['contribution_date'],
-            'source' => 'manual',
-            'reference' => $data['reference'] ?? null,
-            'notes' => $data['notes'] ?? null,
-        ]);
-
-        $ledgerService->record('contribution', Auth::id(), Auth::user()->chama_id, $contribution->amount, 'Contribution received', $contribution->reference);
-
-        return redirect()->back()->with('success', 'Contribution recorded.');
-    }
-
-    public function parseSms(Request $request, MpesaSMSParser $parser, LedgerService $ledgerService)
-    {
-        $data = $request->validate([
-            'message' => ['required', 'string'],
+            'message'      => ['required', 'string'],
+            'payment_type' => ['sometimes', 'in:contribution,loan_repayment'],
+            // loan_id is derived server-side; we ignore any client-supplied value to prevent spoofing
         ]);
 
         $parsed = $parser->parse($data['message']);
 
-        $mapped = MappedMpesaTransaction::create([
-            'user_id' => Auth::id(),
-            'amount' => $parsed['amount'],
-            'sender' => $parsed['sender'],
+        if (empty($parsed['transaction_code']) || floatval($parsed['amount']) <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to parse a valid M-Pesa transaction code or amount. Please check the SMS text.',
+            ], 422);
+        }
+
+        if ($parsed['transaction_code']) {
+            $exists = MappedMpesaTransaction::where('transaction_code', $parsed['transaction_code'])->exists();
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This M-Pesa transaction code has already been submitted.',
+                ], 422);
+            }
+        }
+
+        $paymentType = $data['payment_type'] ?? 'contribution';
+        $loanId      = null;
+
+        if ($paymentType === 'loan_repayment') {
+            $activeLoan = Loan::where('user_id', Auth::id())
+                ->where('status', 'active')
+                ->first();
+
+            if (!$activeLoan) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No active loan found on your account. Please submit this as a Savings Contribution.',
+                ], 422);
+            }
+            $loanId = $activeLoan->id;
+        }
+
+        MappedMpesaTransaction::create([
+            'user_id'          => Auth::id(),
+            'amount'           => $parsed['amount'],
+            'sender'           => $parsed['sender'],
             'transaction_code' => $parsed['transaction_code'],
-            'message' => $parsed['message'],
-            'status' => 'unmapped',
+            'message'          => $parsed['message'],
+            'status'           => 'unmapped',
+            'payment_type'     => $paymentType,
+            'loan_id'          => $loanId,
         ]);
 
-        $ledgerService->record('mpesa_received', Auth::id(), Auth::user()->chama_id, $mapped->amount, 'MPesa SMS parsed', $mapped->transaction_code);
-
-        return redirect()->back()->with('success', 'MPesa SMS captured for review.');
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'amount'           => number_format($parsed['amount'], 2),
+                'sender'           => $parsed['sender'],
+                'transaction_code' => $parsed['transaction_code'],
+                'date'             => $parsed['date'] ?? now()->toDateString(),
+                'payment_type'     => $paymentType,
+            ],
+        ]);
     }
 }
