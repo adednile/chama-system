@@ -12,9 +12,12 @@ class RoleBasedDashboardTest extends TestCase
 
     public function test_member_user_sees_member_dashboard(): void
     {
+        $chama = \App\Models\Chama::create([
+            'name' => 'Gold Chama',
+        ]);
         $user = User::factory()->create([
             'role' => 'member',
-            'chama_id' => null,
+            'chama_id' => $chama->id,
         ]);
 
         $response = $this->actingAs($user)->get('/dashboard');
@@ -25,9 +28,12 @@ class RoleBasedDashboardTest extends TestCase
 
     public function test_treasurer_user_sees_treasurer_dashboard(): void
     {
+        $chama = \App\Models\Chama::create([
+            'name' => 'Gold Chama',
+        ]);
         $user = User::factory()->create([
             'role' => 'treasurer',
-            'chama_id' => null,
+            'chama_id' => $chama->id,
         ]);
 
         $response = $this->actingAs($user)->get('/dashboard');

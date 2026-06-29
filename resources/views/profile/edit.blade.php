@@ -1,29 +1,38 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
+@section('title', 'My Profile Settings')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('content')
+<div class="space-y-6">
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+    {{-- Profile Information Card --}}
+    <div class="premium-card rounded-2xl p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-500 to-gold-700"></div>
+        <div class="max-w-xl">
+            <h3 class="text-base font-bold font-title text-white mb-2">Update Profile Information</h3>
+            <p class="text-xs text-slate-400 mb-6">Update your account name and email address details.</p>
+            @include('profile.partials.update-profile-information-form')
         </div>
     </div>
-</x-app-layout>
+
+    {{-- Update Password Card --}}
+    <div class="premium-card rounded-2xl p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-500 to-gold-700"></div>
+        <div class="max-w-xl">
+            <h3 class="text-base font-bold font-title text-white mb-2">Change Account Password</h3>
+            <p class="text-xs text-slate-400 mb-6">Ensure your account is using a long, random password to stay secure.</p>
+            @include('profile.partials.update-password-form')
+        </div>
+    </div>
+
+    {{-- Delete Account Card --}}
+    <div class="premium-card rounded-2xl p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-brand-rose"></div>
+        <div class="max-w-xl">
+            <h3 class="text-base font-bold font-title text-white mb-2">Delete Chama Account</h3>
+            <p class="text-xs text-slate-400 mb-6">Once your account is deleted, all of its resources and data will be permanently deleted.</p>
+            @include('profile.partials.delete-user-form')
+        </div>
+    </div>
+
+</div>
+@endsection

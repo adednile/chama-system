@@ -21,7 +21,7 @@ class FinancialSchemaTest extends TestCase
 
         $this->assertTrue(Schema::hasColumns('contributions', ['user_id', 'chama_id', 'amount', 'contribution_date']));
         $this->assertTrue(Schema::hasColumns('loans', ['user_id', 'chama_id', 'amount', 'status', 'approved_at']));
-        $this->assertTrue(Schema::hasColumns('repayments', ['loan_id', 'amount', 'paid_at']));
+        $this->assertTrue(Schema::hasColumns('repayments', ['loan_id', 'repayment_amount', 'repayment_date']));
         $this->assertTrue(Schema::hasColumns('fines', ['user_id', 'chama_id', 'amount', 'status']));
         $this->assertTrue(Schema::hasColumns('transactions', ['user_id', 'chama_id', 'type', 'amount', 'description']));
         $this->assertTrue(Schema::hasColumns('mapped_mpesa_transactions', ['user_id', 'amount', 'sender', 'transaction_code', 'message', 'status']));

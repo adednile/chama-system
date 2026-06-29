@@ -12,9 +12,16 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered(): void
     {
+        $chama = \App\Models\Chama::create([
+            'name' => 'Seeded Chama Name',
+            'location' => 'Mombasa',
+        ]);
+
         $response = $this->get('/login');
 
         $response->assertStatus(200);
+        $response->assertViewHas('chamas');
+        $response->assertSee('Seeded Chama Name');
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void
