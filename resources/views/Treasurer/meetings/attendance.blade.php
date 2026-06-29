@@ -4,14 +4,14 @@
 @section('content')
 <div class="space-y-6 max-w-3xl mx-auto">
     <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
-        <a href="{{ route('dashboard') }}" class="hover:text-primary transition-colors">Dashboard</a>
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
-        <a href="{{ route('treasurer.meetings') }}" class="hover:text-primary transition-colors">Meetings</a>
+        <a href="{{ route('treasurer.meetings') }}" class="hover:text-digital-blue-600 transition-colors">Meetings</a>
         <span class="material-symbols-outlined text-xs">chevron_right</span>
         <span class="text-slate-800 font-medium">Mark Attendance</span>
     </div>
 
-    <div class="premium-card p-6 rounded-2xl border-l-4 border-gold-500 relative overflow-hidden mb-6">
+    <div class="premium-card p-6 rounded-2xl border-l-4 border-digital-blue-500 relative overflow-hidden mb-6">
         <div class="flex items-center justify-between mb-4">
             <div>
                 <h2 class="font-title font-bold text-xl text-slate-800">Track Attendance</h2>
@@ -21,7 +21,7 @@
                 @if($meeting->meeting_type === 'regular')
                     <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">Regular</span>
                 @elseif($meeting->meeting_type === 'agm')
-                    <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">AGM</span>
+                    <span class="px-2.5 py-1 rounded-full bg-digital-blue-50 text-digital-blue-700 text-[10px] font-bold border border-digital-blue-200">AGM</span>
                 @else
                     <span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold border border-rose-200">Special</span>
                 @endif
@@ -53,7 +53,7 @@
                 @forelse($attendances as $attendance)
                     <div class="px-6 py-4 flex items-center justify-between hover:bg-slate-50/50 transition">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-digital-blue-500 to-digital-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                                 {{ strtoupper(substr($attendance->user->name, 0, 2)) }}
                             </div>
                             <div>
@@ -79,8 +79,8 @@
             </div>
 
             <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
-                <a href="{{ route('treasurer.meetings') }}" class="flex-1 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl text-center hover:bg-slate-50 transition active:scale-95">Cancel</a>
-                <button type="submit" class="flex-1 py-2.5 gold-gradient-btn font-bold text-xs rounded-xl shadow-md active:scale-95">Save Attendance Records</button>
+                <a href="{{ route('treasurer.meetings') }}" class="flex-1 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl text-center hover:bg-slate-50 transition active:scale-95 shadow-sm">Cancel</a>
+                <button type="submit" class="flex-1 py-2.5 bg-digital-blue-600 hover:bg-digital-blue-700 text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all">Save Attendance Records</button>
             </div>
         </form>
     </div>

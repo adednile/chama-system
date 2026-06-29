@@ -6,7 +6,7 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
         <div>
             <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
-                <a href="{{ route('dashboard') }}" class="hover:text-primary transition-colors">Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
                 <span class="material-symbols-outlined text-xs">chevron_right</span>
                 <span class="text-slate-800 font-medium">Meetings Management</span>
             </nav>
@@ -14,10 +14,10 @@
             <p class="text-xs text-slate-500 mt-1 max-w-xl">Review past deliberations, manage upcoming agendas, and track member participation across all Chama sessions.</p>
         </div>
         <div class="flex gap-3">
-            <button class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-slate-50 transition active:scale-95">
+            <a href="{{ route('treasurer.meetings.export') }}" class="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-slate-50 transition active:scale-95">
                 <span class="material-symbols-outlined text-sm">download</span> Export Report
-            </button>
-            <button class="gold-gradient-btn px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md" onclick="openModal()">
+            </a>
+            <button class="bg-digital-blue-600 hover:bg-digital-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition-all active:scale-95" onclick="openModal()">
                 <span class="material-symbols-outlined text-sm">add</span> Create Meeting
             </button>
         </div>
@@ -25,22 +25,35 @@
 
     <!-- Dashboard Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 font-medium">
-        <div class="premium-card p-6 rounded-2xl border-t-4 border-emerald-500 relative overflow-hidden">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                    <span class="material-symbols-outlined text-xl">groups</span>
+        <div class="premium-card p-6 rounded-2xl border-t-4 border-emerald-500 relative overflow-hidden flex flex-col justify-center">
+            <div class="flex items-center gap-4">
+                <!-- Circular Infographic -->
+                <div class="relative w-16 h-16 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <!-- Background circle -->
+                        <circle cx="50" cy="50" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                        <!-- Foreground circle -->
+                        <circle cx="50" cy="50" r="40" stroke="#10b981" stroke-width="8" fill="transparent"
+                                stroke-dasharray="251.2" stroke-dashoffset="{{ 251.2 * (1 - ($averageAttendance / 100)) }}"
+                                stroke-linecap="round" class="transition-all duration-700 ease-out" />
+                    </svg>
+                    <div class="absolute flex flex-col items-center">
+                        <span class="text-sm font-bold font-title text-emerald-600">{{ $averageAttendance }}%</span>
+                    </div>
                 </div>
-                <span class="text-emerald-600 text-[10px] font-bold uppercase tracking-wider">Attendance Rate</span>
+                <div>
+                    <span class="text-emerald-600 text-[10px] font-bold uppercase tracking-wider block">Attendance Rate</span>
+                    <p class="text-slate-500 text-xs font-semibold mt-0.5">Average Attendance</p>
+                    <p class="text-[10px] text-slate-400 font-medium">Across all meetings</p>
+                </div>
             </div>
-            <p class="text-slate-500 text-xs font-semibold">Average Attendance</p>
-            <h3 class="text-2xl font-title font-black text-slate-800 mt-1">{{ $averageAttendance }}%</h3>
         </div>
-        <div class="premium-card p-6 rounded-2xl border-t-4 border-gold-500 relative overflow-hidden">
+        <div class="premium-card p-6 rounded-2xl border-t-4 border-digital-blue-500 relative overflow-hidden">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                <div class="w-10 h-10 rounded-xl bg-digital-blue-50 flex items-center justify-center text-digital-blue-600">
                     <span class="material-symbols-outlined text-xl">history</span>
                 </div>
-                <span class="text-amber-600 text-[10px] font-bold uppercase tracking-wider">Historical Log</span>
+                <span class="text-digital-blue-600 text-[10px] font-bold uppercase tracking-wider">Historical Log</span>
             </div>
             <p class="text-slate-500 text-xs font-semibold">Meetings Conducted</p>
             <h3 class="text-2xl font-title font-black text-slate-800 mt-1">{{ $meetings->total() }}</h3>
@@ -122,10 +135,10 @@
                             </td>
                             <td class="px-6 py-4.5 text-right">
                                 <div class="inline-flex items-center gap-1.5 justify-end w-full">
-                                    <a href="{{ route('treasurer.meetings.attendance', $meeting) }}" class="inline-flex items-center gap-1 text-xs font-bold text-gold-600 hover:text-gold-700 bg-amber-50 border border-amber-200 hover:bg-amber-100/50 py-1.5 px-2.5 rounded-lg transition-colors">
+                                    <a href="{{ route('treasurer.meetings.attendance', $meeting) }}" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100/50 py-1.5 px-2.5 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-sm font-bold">edit_calendar</span> Track
                                     </a>
-                                    <button onclick="openEditModal({{ $meeting->id }}, '{{ $meeting->meeting_date->format('Y-m-d\TH:i') }}', '{{ $meeting->meeting_type }}', '{{ addslashes($meeting->notes) }}')" class="inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100/50 py-1.5 px-2.5 rounded-lg transition-colors">
+                                    <button onclick="openEditModal({{ $meeting->id }}, '{{ $meeting->meeting_date->format('Y-m-d\TH:i') }}', '{{ $meeting->meeting_type }}', '{{ addslashes($meeting->notes) }}')" class="inline-flex items-center gap-1 text-xs font-bold text-digital-blue-700 hover:text-digital-blue-800 bg-digital-blue-50 border border-digital-blue-200 hover:bg-digital-blue-100/50 py-1.5 px-2.5 rounded-lg transition-colors">
                                         <span class="material-symbols-outlined text-sm font-bold">edit</span> Postpone
                                     </button>
                                     <form action="{{ route('treasurer.meetings.destroy', $meeting) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to cancel this meeting?');">
@@ -165,7 +178,7 @@
     <div class="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 translate-y-8 transition-transform duration-500">
         <div class="p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-gold-600">
+                <div class="w-10 h-10 rounded-xl bg-digital-blue-50 flex items-center justify-center text-digital-blue-600">
                     <span class="material-symbols-outlined">calendar_today</span>
                 </div>
                 <div>
@@ -183,14 +196,14 @@
                 <label class="block text-xs font-bold text-slate-500 mb-1.5">Meeting Date & Time</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">event</span>
-                    <input name="meeting_date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-xs text-slate-700 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all" type="datetime-local" value="{{ now()->format('Y-m-d\TH:i') }}"/>
+                    <input name="meeting_date" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-xs text-slate-700 focus:ring-2 focus:ring-digital-blue-500/20 focus:border-digital-blue-500 outline-none transition-all" type="datetime-local" value="{{ now()->format('Y-m-d\TH:i') }}"/>
                 </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 mb-1.5">Meeting Type</label>
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">category</span>
-                    <select name="meeting_type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-xs text-slate-700 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none appearance-none transition-all">
+                    <select name="meeting_type" required class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-xs text-slate-700 focus:ring-2 focus:ring-digital-blue-500/20 focus:border-digital-blue-500 outline-none appearance-none transition-all">
                         <option value="regular">Regular Monthly Meeting</option>
                         <option value="agm">Annual General Meeting (AGM)</option>
                         <option value="special">Special Call Meeting</option>
@@ -199,11 +212,11 @@
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 mb-1.5">Meeting Notes / Agenda</label>
-                <textarea name="notes" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none resize-none placeholder:text-slate-300" placeholder="Outline the main topics for discussion..." rows="4"></textarea>
+                <textarea name="notes" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 focus:ring-2 focus:ring-digital-blue-500/20 focus:border-digital-blue-500 outline-none resize-none placeholder:text-slate-300" placeholder="Outline the main topics for discussion..." rows="4"></textarea>
             </div>
             <div class="flex items-center gap-3 pt-2">
                 <button class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition active:scale-95" onclick="closeModal()" type="button">Cancel</button>
-                <button class="flex-1 py-2.5 gold-gradient-btn font-bold text-xs rounded-xl shadow-md active:scale-95" type="submit">Save Meeting</button>
+                <button class="flex-1 py-2.5 bg-digital-blue-600 hover:bg-digital-blue-700 text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition" type="submit">Save Meeting</button>
             </div>
         </form>
     </div>
@@ -256,7 +269,7 @@
             </div>
             <div class="flex items-center gap-3 pt-2">
                 <button class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition active:scale-95" onclick="closeEditModal()" type="button">Cancel</button>
-                <button class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md active:scale-95" type="submit">Update Meeting</button>
+                <button class="flex-1 py-2.5 bg-digital-blue-600 hover:bg-digital-blue-700 text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition" type="submit">Update Meeting</button>
             </div>
         </form>
     </div>
