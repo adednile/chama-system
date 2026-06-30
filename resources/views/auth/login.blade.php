@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>ChamaWealth | Secure Access</title>
+    <title>Chama Gold | Secure Access</title>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -109,44 +109,63 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
         }
         .auth-card-transition {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .form-input-focus:focus {
-            border-color: #d97706;
-            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+            border-color: #0066ff;
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
             outline: none;
+        }
+        .auth-bg {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.55) 100%),
+                        url('/images/auth-bg.png') no-repeat center center;
+            background-size: cover;
+        }
+        .animate-fade-in {
+            animation: formFadeIn 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes formFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
-<body class="bg-[#f1f5f9] font-body-md text-on-background min-h-screen flex items-center justify-center p-4 sm:p-gutter relative overflow-hidden">
+<body class="auth-bg font-body-md text-on-background min-h-screen flex items-center justify-center p-4 sm:p-gutter relative overflow-hidden">
 
 <div class="w-full max-w-container-max mx-auto grid lg:grid-cols-12 gap-stack-lg items-center relative z-10">
     <!-- Brand Narrative Section (Desktop Only) -->
     <div class="hidden lg:flex lg:col-span-6 flex-col gap-stack-md pr-stack-lg">
         <div class="flex items-center gap-stack-sm mb-stack-md">
-            <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">account_balance</span>
-            <h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">ChamaWealth</h1>
+            <span class="material-symbols-outlined text-[#d97706] text-4xl" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+            <h1 class="font-headline-xl text-headline-xl text-[#d97706] tracking-tight">Chama Gold</h1>
         </div>
-        <h2 class="font-headline-lg text-headline-lg text-on-background max-w-md">The communal engine for your group's financial future.</h2>
-        <p class="font-body-lg text-body-lg text-secondary max-w-lg">Experience the next generation of social banking in Kenya. Secure, transparent, and built for communal prosperity.</p>
+        <h2 class="font-headline-lg text-headline-lg text-white max-w-md">The communal engine for your group's financial future.</h2>
+        <p class="font-body-lg text-body-lg text-slate-300 max-w-lg">Experience the next generation of social banking in Kenya. Secure, transparent, and built for communal prosperity.</p>
         <div class="mt-stack-lg grid grid-cols-2 gap-stack-md">
-            <div class="bg-surface-container-low p-stack-md border border-outline-variant rounded-xl flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary">security</span>
-                <p class="font-label-md text-label-md text-on-surface">Secure Ledger</p>
+            <div class="bg-slate-900/40 backdrop-blur-md p-stack-md border border-slate-700/40 rounded-xl flex items-center gap-3">
+                <span class="material-symbols-outlined text-[#d97706]">security</span>
+                <p class="font-label-md text-label-md text-slate-200">Secure Ledger</p>
             </div>
-            <div class="bg-surface-container-low p-stack-md border border-outline-variant rounded-xl flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary">trending_up</span>
-                <p class="font-label-md text-label-md text-on-surface">Growth Tracking</p>
+            <div class="bg-slate-900/40 backdrop-blur-md p-stack-md border border-slate-700/40 rounded-xl flex items-center gap-3">
+                <span class="material-symbols-outlined text-[#d97706]">trending_up</span>
+                <p class="font-label-md text-label-md text-slate-200">Growth Tracking</p>
             </div>
         </div>
     </div>
 
     <!-- Auth Canvas -->
     <div class="lg:col-span-6 w-full flex justify-center">
-        <div class="w-full max-w-[480px] bg-white rounded-xl shadow-sm border border-secondary-container p-8 sm:p-10 auth-card-transition overflow-hidden">
+        <div class="w-full max-w-[480px] bg-white/70 backdrop-blur-md rounded-xl shadow-xl border border-white/50 p-8 sm:p-10 auth-card-transition overflow-hidden animate-fade-in">
             
             <!-- Session Flash Messages -->
             @if(session('status'))
@@ -164,8 +183,8 @@
             @endif
 
             <!-- Form Tabs Toggle -->
-            <div class="flex bg-surface-container-low p-1 rounded-lg mb-stack-lg">
-                <button class="flex-1 py-2 font-label-md rounded-md transition-all bg-white text-primary shadow-sm" id="toggleLogin" onclick="showAuth('login')">Login</button>
+            <div class="flex bg-slate-200/40 p-1 rounded-lg mb-stack-lg backdrop-blur-sm">
+                <button class="flex-1 py-2 font-label-md rounded-md transition-all bg-white/90 text-primary shadow-sm" id="toggleLogin" onclick="showAuth('login')">Login</button>
                 <button class="flex-1 py-2 font-label-md rounded-md transition-all text-secondary" id="toggleRegister" onclick="showAuth('register')">Register</button>
             </div>
 
@@ -177,7 +196,7 @@
                     @csrf
                     <div>
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="email">Email Address</label>
-                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="email" name="email" placeholder="name@example.com" required="" type="email" value="{{ old('email') }}"/>
+                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="email" name="email" placeholder="name@example.com" required="" type="email" value="{{ old('email') }}"/>
                     </div>
                     <div>
                         <div class="flex justify-between mb-stack-xs">
@@ -186,7 +205,7 @@
                                 <a class="text-label-md font-label-md text-primary hover:underline" href="{{ route('password.request') }}">Forgot password?</a>
                             @endif
                         </div>
-                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="password" name="password" placeholder="••••••••" required="" type="password"/>
                     </div>
                     <div class="flex items-center gap-stack-sm py-stack-xs">
                         <input class="w-4 h-4 rounded text-primary border-outline-variant focus:ring-primary" id="remember" name="remember" type="checkbox"/>
@@ -208,26 +227,26 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
                         <div>
                             <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="reg_name">Full Name</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="reg_name" name="name" placeholder="John Doe" required="" type="text" value="{{ old('name') }}"/>
+                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="reg_name" name="name" placeholder="John Doe" required="" type="text" value="{{ old('name') }}"/>
                         </div>
                         <div>
                             <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="reg_email">Email</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="reg_email" name="email" placeholder="john@example.com" required="" type="email" value="{{ old('email') }}"/>
+                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="reg_email" name="email" placeholder="john@example.com" required="" type="email" value="{{ old('email') }}"/>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-stack-md">
                         <div>
                             <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="reg_pass">Password</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="reg_pass" name="password" placeholder="••••••••" required="" type="password"/>
+                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="reg_pass" name="password" placeholder="••••••••" required="" type="password"/>
                         </div>
                         <div>
                             <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="password_confirmation">Confirm</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required="" type="password"/>
+                            <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required="" type="password"/>
                         </div>
                     </div>
                     <div class="pt-stack-xs border-t border-secondary-container mt-stack-md">
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm">Membership Type</label>
-                        <select class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="registration_type" name="registration_type" onchange="toggleChamaLogic()">
+                        <select class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="registration_type" name="registration_type" onchange="toggleChamaLogic()">
                             <option value="join" {{ old('registration_type') === 'join' ? 'selected' : '' }}>Join an Existing Chama</option>
                             <option value="create" {{ old('registration_type') === 'create' ? 'selected' : '' }}>Create a New Chama</option>
                         </select>
@@ -236,7 +255,7 @@
                     <!-- Conditional: Join Chama -->
                     <div class="space-y-stack-xs" id="join_logic">
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="chama_id">Select Your Group</label>
-                        <select class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="chama_id" name="chama_id">
+                        <select class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="chama_id" name="chama_id">
                             <option value="">-- Choose Chama --</option>
                             @foreach($chamas ?? [] as $c)
                                 <option value="{{ $c->id }}" {{ old('chama_id') == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->location }})</option>
@@ -247,7 +266,7 @@
                     <!-- Conditional: Create Chama -->
                     <div class="hidden animate-in fade-in slide-in-from-top-2 duration-300" id="create_logic">
                         <label class="block font-label-md text-label-md text-on-surface-variant mb-stack-xs" for="new_chama_name">Chama Name</label>
-                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md form-input-focus transition-all" id="new_chama_name" name="new_chama_name" placeholder="e.g. Prosper Wealth Circle" type="text" value="{{ old('new_chama_name') }}"/>
+                        <input class="w-full h-12 px-4 rounded-lg border border-outline-variant bg-white/60 focus:bg-white/90 border border-slate-300/50 backdrop-blur-sm font-body-md form-input-focus transition-all" id="new_chama_name" name="new_chama_name" placeholder="e.g. Prosper Wealth Circle" type="text" value="{{ old('new_chama_name') }}"/>
                     </div>
 
                     <button class="w-full h-12 gold-gradient text-white font-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-stack-sm mt-stack-md" type="submit">
@@ -259,7 +278,7 @@
 
             <!-- Social Proof Footer -->
             <div class="mt-stack-lg pt-stack-md border-t border-outline-variant flex flex-col items-center gap-stack-sm">
-                <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Trusted by groups across Kenya</p>
+                <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Trusted by chamas across Kenya</p>
                 <div class="flex gap-stack-md opacity-40 grayscale filter">
                     <img class="h-6" alt="Secure Ledger" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBd16bLf7v9JUJWLO4fAtedVlvG8YcOA4Pemv9sDBRw-2aaKk0uD6OEbkcv16vk7VjnGrV6mkIJk7AEVx8TPK6K_zWDCUEbASY8xscS7rN7SLLg1xngzdecomYhrV8bCnuWwg9vrugXG8FWHtbS48xe62YTI9p5NZW9HySpcwuFY8mIXU2G7meGvq9qQT5qVeGdxSGvGpuPiRlnT5dphQgIZ054mXrlV0XAxIAczhlPNWv9AYR84wCvVayFpXcOQPMHU1jPfyU92Zk"/>
                 </div>
