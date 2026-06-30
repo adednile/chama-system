@@ -4,15 +4,21 @@
 @section('content')
 <div class="space-y-6">
 
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800 font-medium">Group Financial Reports</span>
+    </nav>
+
     {{-- Stats Row --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-medium">
         <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-blue-500 relative overflow-hidden">
             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Total Savings Contributions</span>
             <span class="text-2xl font-title font-black text-slate-800">Ksh {{ number_format($contributions->sum('amount'), 2) }}</span>
         </div>
-        <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-gold-500 relative overflow-hidden">
+        <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-digital-blue-500 relative overflow-hidden">
             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Total Loan Capital Disbursed</span>
-            <span class="text-2xl font-title font-black text-gold-600">Ksh {{ number_format($loans->sum('amount'), 2) }}</span>
+            <span class="text-2xl font-title font-black text-digital-blue-600">Ksh {{ number_format($loans->sum('amount'), 2) }}</span>
         </div>
         <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-rose-500 relative overflow-hidden">
             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Total Late Fines Collected</span>
@@ -24,7 +30,7 @@
     <div class="premium-card rounded-2xl overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4">
             <h3 class="text-sm font-bold font-title text-slate-800">Chama Group Member Account Balance</h3>
-            <a href="{{ route('reports.treasurer') }}?download=pdf" class="gold-gradient-btn px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+            <a href="{{ route('reports.treasurer') }}?download=pdf" class="bg-digital-blue-600 hover:bg-digital-blue-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95">
                 <span class="material-symbols-outlined text-xs font-bold">picture_as_pdf</span> Download PDF Sheet
             </a>
         </div>
@@ -53,7 +59,7 @@
                         <td class="px-6 py-4">Ksh {{ number_format($userContributions, 2) }}</td>
                         <td class="px-6 py-4 text-slate-500">Ksh {{ number_format($userLoans, 2) }}</td>
                         <td class="px-6 py-4 text-slate-500 font-medium">Ksh {{ number_format($userFines, 2) }}</td>
-                        <td class="px-6 py-4 text-right font-bold text-gold-600">
+                        <td class="px-6 py-4 text-right font-bold text-slate-800">
                             Ksh {{ number_format($netBalance, 2) }}
                         </td>
                     </tr>

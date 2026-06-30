@@ -4,6 +4,12 @@
 @section('content')
 <div class="space-y-stack-lg max-w-container-max mx-auto">
 
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800 font-medium">SMS Parser</span>
+    </nav>
+
     {{-- Header Card --}}
     <div class="premium-card rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-1 gold-gradient"></div>
@@ -60,7 +66,7 @@
                                 Loan Repayment
                             </span>
                             @else
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-50 border-amber-200 text-amber-700">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700">
                                 <span class="material-symbols-outlined text-xs" style="font-size:14px;">savings</span>
                                 Contribution
                             </span>
@@ -71,7 +77,7 @@
                                 $statusColors = [
                                     'mapped'   => 'bg-emerald-100 text-emerald-800 border-emerald-200',
                                     'rejected' => 'bg-rose-100 text-rose-800 border-rose-200',
-                                    'unmapped' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                    'unmapped' => 'bg-digital-blue-50 text-digital-blue-800 border-digital-blue-200',
                                 ];
                                 $colorClass = $statusColors[$tx->status] ?? 'bg-slate-100 text-slate-700';
                             @endphp
@@ -89,11 +95,11 @@
                                         {{ $tx->user && $tx->user->role === 'member' ? $tx->user_id : 'null' }},
                                         '{{ $tx->payment_type }}',
                                         {{ $tx->loan_id ?? 'null' }})"
-                                    class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-label-sm transition shadow-sm hover:shadow-md">
+                                    class="px-4 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded font-label-sm font-bold transition shadow-sm">
                                 Match
                             </button>
                             <button onclick="rejectTransaction({{ $tx->id }})"
-                                    class="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded font-label-sm transition shadow-sm hover:shadow-md">
+                                    class="px-4 py-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded font-label-sm font-bold transition shadow-sm">
                                 Reject
                             </button>
                             @else
@@ -124,7 +130,7 @@
 {{-- ── Match Modal ─────────────────────────────────────────────────────────── --}}
 <div id="matchModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
     <div class="bg-white rounded-xl max-w-md w-full mx-4 border border-secondary-container shadow-2xl relative overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-1 gold-gradient"></div>
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-digital-blue-500 to-digital-blue-600"></div>
 
         <div class="flex items-center justify-between p-6 border-b border-slate-100">
             <h3 class="text-lg font-bold font-title text-on-surface flex items-center gap-2">
@@ -160,7 +166,7 @@
                 <label for="matchMemberId" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Assign to Member</label>
                 <select id="matchMemberId"
                         onchange="onMemberChange(this.value)"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-on-surface text-sm transition-all">
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-digital-blue-500 focus:border-digital-blue-500 outline-none text-on-surface text-sm transition-all">
                     <option value="">— Select Member —</option>
                     @foreach($members ?? [] as $member)
                         <option value="{{ $member->id }}">
@@ -176,7 +182,7 @@
                 <label for="matchPaymentType" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Apply Payment As</label>
                 <select id="matchPaymentType"
                         onchange="onPaymentTypeChange()"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-on-surface text-sm transition-all">
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-digital-blue-500 focus:border-digital-blue-500 outline-none text-on-surface text-sm transition-all">
                     <option value="contribution">💰 Savings Contribution</option>
                     <option value="loan_repayment">🏦 Loan Repayment</option>
                 </select>
@@ -196,11 +202,11 @@
             {{-- Actions --}}
             <div class="flex gap-3 pt-2">
                 <button onclick="submitMatch()"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition flex-1 text-sm shadow-md flex items-center justify-center gap-1">
+                        class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold py-3 px-6 rounded-xl transition flex-1 text-sm shadow-sm flex items-center justify-center gap-1">
                     Confirm Mapping
                 </button>
                 <button onclick="closeMatchModal()"
-                        class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl transition text-sm">
+                        class="bg-digital-blue-50 hover:bg-digital-blue-100 border border-digital-blue-200 text-digital-blue-700 font-semibold py-3 px-6 rounded-xl transition text-sm">
                     Cancel
                 </button>
             </div>
@@ -243,7 +249,7 @@
             intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-emerald-50 border-emerald-200 text-emerald-700';
         } else {
             intentEl.innerText   = '💰 Contribution';
-            intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-amber-50 border-amber-200 text-amber-700';
+            intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700';
         }
 
         // Pre-fill payment type (from stored intent)
