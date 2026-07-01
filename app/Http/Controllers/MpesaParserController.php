@@ -47,7 +47,8 @@ class MpesaParserController extends Controller
     public function store(Request $request, MpesaSMSParser $parser)
     {
         $data = $request->validate([
-            'message' => ['required', 'string'],
+            'message'      => ['required', 'string'],
+            'payment_type' => ['nullable', 'string', 'in:contribution,loan_repayment'],
         ]);
 
         $parsed = $parser->parse($data['message']);
@@ -76,7 +77,7 @@ class MpesaParserController extends Controller
             'transaction_code' => $parsed['transaction_code'],
             'message'          => $parsed['message'],
             'status'           => 'unmapped',
-            'payment_type'     => 'contribution', // treasurer assigns type at match step
+            'payment_type'     => $data['payment_type'] ?? 'contribution',
         ]);
 
         return response()->json([

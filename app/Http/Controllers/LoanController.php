@@ -152,13 +152,29 @@ class LoanController extends Controller
 
     public function pending()
 {
+    $chamaId = Auth::user()->chama_id;
+
     $pendingLoans = Loan::where('status', 'pending')
-        ->where('chama_id', Auth::user()->chama_id)
+        ->where('chama_id', $chamaId)
         ->with('user')
         ->latest()
         ->get();
 
-    return view('Treasurer.pending-loans', compact('pendingLoans'));
+    // Check group cash reserves pool limit
+    $contributions = \App\Models\Contribution::where('chama_id', $chamaId)->sum('amount');
+    $repayments = \App\Models\Repayment::whereHas('loan', function ($q) use ($chamaId) {
+        $q->where('chama_id', $chamaId);
+    })->sum('repayment_amount');
+    $finesPaid = \App\Models\Fine::where('chama_id', $chamaId)
+        ->where('status', 'paid')
+        ->sum('amount');
+    $loansDisbursed = \App\Models\Loan::where('chama_id', $chamaId)
+        ->whereIn('status', ['active', 'completed'])
+        ->sum('amount');
+
+    $availableCashPool = ($contributions + $repayments + $finesPaid) - $loansDisbursed;
+
+    return view('Treasurer.pending-loans', compact('pendingLoans', 'availableCashPool', 'loansDisbursed'));
 }
 
 public function reject(Loan $loan, Request $request)

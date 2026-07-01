@@ -4,6 +4,12 @@
 @section('content')
 <div class="space-y-6">
 
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800 font-medium">My Financial Statement</span>
+    </nav>
+
     {{-- Header Card --}}
     <div class="premium-card rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-500 to-gold-600"></div>

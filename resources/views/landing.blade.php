@@ -157,8 +157,8 @@
     <!-- Header Navigation -->
     <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 transition-all">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#d97706] to-[#b45309] rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">G</div>
+            <a href="/" class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Chama Gold Logo" class="w-10 h-10 object-contain rounded-xl shadow-md border border-slate-100" />
                 <div>
                     <span class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</span>
                     <p class="text-[9px] text-[#b45309] font-bold tracking-widest uppercase mt-0.5">Wealth &amp; Trust</p>
@@ -475,6 +475,22 @@
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-sm text-slate-500 text-center">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="font-bold text-slate-800 tracking-wide font-title">Chama Gold &amp; Trust</span>
+                <span class="mx-2">·</span>
+                <span>© {{ date('Y') }} Safe &amp; Secure Bookkeeping</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="{{ route('trust.info', ['tab' => 'privacy']) }}" class="hover:text-slate-800 transition">Privacy</a>
+                <a href="{{ route('trust.info', ['tab' => 'terms']) }}" class="hover:text-slate-800 transition">Terms</a>
+                <a href="{{ route('trust.info', ['tab' => 'support']) }}" class="hover:text-slate-800 transition">Support</a>
+            </div>
+        </div>
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             function animateCounter(el) {
@@ -537,6 +553,5 @@
             });
         });
     </script>
-
 </body>
 </html>

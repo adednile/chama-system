@@ -4,6 +4,12 @@
 @section('content')
 <div class="space-y-6">
 
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="{{ route('dashboard') }}" class="hover:text-digital-blue-600 transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-xs">chevron_right</span>
+        <span class="text-slate-800 font-medium">Penalty Management</span>
+    </nav>
+
     {{-- Header Card --}}
     <div class="premium-card rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-500 to-gold-600"></div>
@@ -21,7 +27,7 @@
     <div class="premium-card rounded-2xl overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
             <h3 class="text-sm font-bold font-title text-slate-800">Chama Master Penalty List</h3>
-            <a href="{{ route('treasurer.chama.config') }}" class="text-xs font-bold text-gold-600 hover:underline flex items-center gap-1">
+            <a href="{{ route('treasurer.chama.config') }}" class="text-xs font-bold text-digital-blue-600 hover:text-digital-blue-700 hover:underline flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs font-bold">settings</span> Configure Penalty Rules
             </a>
         </div>
@@ -58,7 +64,7 @@
                             @if($fine->status !== 'paid')
                                 <form action="{{ route('treasurer.penalties.markPaid', $fine) }}" method="POST" class="inline" onsubmit="return confirm('Confirm payment of this penalty?');">
                                     @csrf
-                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-sm">
+                                    <button type="submit" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-sm">
                                         Mark Paid
                                     </button>
                                 </form>
