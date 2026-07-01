@@ -13,7 +13,6 @@
     <!-- Custom Tailwind Configuration -->
     <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
@@ -66,23 +65,42 @@
                         "tertiary": "#006948",
                         "on-error-container": "#93000a",
                         "slate-custom": "#f1f5f9",
-                        "gold-gradient-start": "#d97706",
-                        "gold-gradient-end": "#b45309",
+                        "gold-gradient-start": "#0066ff",
+                        "gold-gradient-end": "#0052cc",
+
+                        "digital-blue": {
+                            "50": "#e5f0ff",
+                            "100": "#cce0ff",
+                            "200": "#99c2ff",
+                            "300": "#66a3ff",
+                            "400": "#3385ff",
+                            "500": "#0066ff",
+                            "600": "#0052cc",
+                            "700": "#003d99",
+                            "800": "#002966",
+                            "900": "#001433",
+                            "950": "#000e24"
+                        },
 
                         // Legacy compatibility tokens
                         gold: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            500: '#d97706',
-                            600: '#b45309',
-                            700: '#78350f',
+                            50: '#e5f0ff',
+                            100: '#cce0ff',
+                            200: '#99c2ff',
+                            300: '#66a3ff',
+                            400: '#3385ff',
+                            500: '#0066ff',
+                            600: '#0052cc',
+                            700: '#003d99',
+                            800: '#002966',
+                            900: '#001433',
+                            950: '#000e24',
                         },
                         brand: {
                             navy: '#f1f5f9',
                             dark: '#ffffff',
-                            gold: '#b45309',
-                            goldlight: '#d97706',
+                            gold: '#0052cc',
+                            goldlight: '#0066ff',
                             emerald: '#059669',
                             rose: '#e11d48',
                             slate: '#475569'
@@ -151,11 +169,11 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
         }
         .gold-glow:focus {
-            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
-            border-color: #d97706;
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+            border-color: #0066ff;
         }
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
@@ -171,7 +189,7 @@
             top: 15%;
             height: 70%;
             width: 3px;
-            background: linear-gradient(180deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(180deg, #0066ff 0%, #0052cc 100%);
             border-radius: 0 4px 4px 0;
             opacity: 0;
             transition: opacity 0.2s ease;
@@ -180,24 +198,24 @@
             opacity: 1;
         }
         .sidebar-link.active {
-            background: rgba(180, 83, 9, 0.08);
-            color: #b45309;
+            background: rgba(0, 82, 204, 0.08);
+            color: #0052cc;
             font-weight: 600;
         }
         .gold-gradient-text {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .gold-gradient-btn {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             color: #ffffff;
             transition: all 0.2s ease;
         }
         .gold-gradient-btn:hover {
             opacity: 0.95;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(180, 83, 9, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 82, 204, 0.2);
         }
         .gold-gradient-btn:active {
             transform: translateY(0);
@@ -222,14 +240,15 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-700">
 
+@auth
 <!-- Sidebar -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-white border-r border-slate-200 z-40 hidden md:flex flex-col py-6 px-4 shadow-sm">
+<aside class="h-screen fixed left-0 top-0 bg-white border-r border-slate-200 z-40 hidden md:flex flex-col py-6 px-4 shadow-sm transition-all duration-300 group ease-in-out {{ auth()->user()->role === 'member' ? 'w-20 hover:w-64' : 'w-64' }}">
     <div class="mb-8 px-3">
-        <a href="/" class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md">G</div>
-            <div>
+        <a href="/" class="flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="Chama Gold Logo" class="w-10 h-10 object-contain rounded-xl shadow-md border border-slate-100 flex-shrink-0" />
+            <div class="{{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : 'opacity-100' }}">
                 <h1 class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</h1>
-                <p class="text-[10px] text-gold-600 font-semibold tracking-widest uppercase mt-1">Wealth &amp; Trust</p>
+                <p class="text-[10px] text-[#b45309] font-semibold tracking-widest uppercase mt-1">Wealth &amp; Trust</p>
             </div>
         </a>
     </div>
@@ -239,22 +258,26 @@
             $currentRoute = request()->route()->getName();
         @endphp
         <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'dashboard' ? 'active' : '' }}">
-            <span class="material-symbols-outlined text-lg">dashboard</span>
-            <span class="text-sm font-medium">Dashboard</span>
+            <span class="material-symbols-outlined text-lg flex-shrink-0">dashboard</span>
+            <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Dashboard</span>
         </a>
         
         @if(auth()->user()->role === 'member')
             <a href="{{ route('member.contributions') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.contributions') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">payments</span>
-                <span class="text-sm font-medium">Contributions</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">payments</span>
+                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Contributions</span>
             </a>
             <a href="{{ route('member.loans') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.loans') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">account_balance</span>
-                <span class="text-sm font-medium">Loans</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">account_balance</span>
+                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Loans</span>
+            </a>
+            <a href="{{ route('member.fines') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.fines') ? 'active' : '' }}">
+                <span class="material-symbols-outlined text-lg flex-shrink-0">gavel</span>
+                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Fines</span>
             </a>
             <a href="{{ route('member.attendance') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.attendance') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">event_available</span>
-                <span class="text-sm font-medium">Attendance</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">event_available</span>
+                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Attendance</span>
             </a>
         @endif
 
@@ -263,23 +286,27 @@
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Administration</span>
             </div>
             <a href="{{ route('treasurer.meetings') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.meetings') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">event_available</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">event_available</span>
                 <span class="text-sm font-medium">Meetings</span>
             </a>
+            <a href="{{ route('treasurer.loans.pending') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.loans.pending') ? 'active' : '' }}">
+                <span class="material-symbols-outlined text-lg flex-shrink-0">account_balance</span>
+                <span class="text-sm font-medium">Loans</span>
+            </a>
             <a href="{{ route('treasurer.sms-parser') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.sms-parser') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">sms</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">sms</span>
                 <span class="text-sm font-medium">SMS Parser</span>
             </a>
             <a href="{{ route('treasurer.penalties') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.penalties') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">gavel</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">gavel</span>
                 <span class="text-sm font-medium">Penalties</span>
             </a>
             <a href="{{ route('reports.treasurer') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'reports.treasurer') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">assessment</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">assessment</span>
                 <span class="text-sm font-medium">Reports</span>
             </a>
             <a href="{{ route('treasurer.chama.config') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.chama.config') ? 'active' : '' }}">
-                <span class="material-symbols-outlined text-lg">settings</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">settings</span>
                 <span class="text-sm font-medium">Group Config</span>
             </a>
         @endif
@@ -287,40 +314,44 @@
 
     <div class="mt-auto pt-6 border-t border-slate-100 space-y-1">
         <a href="{{ route('profile.edit') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'profile.edit' ? 'active' : '' }}">
-            <span class="material-symbols-outlined text-lg">account_circle</span>
-            <span class="text-sm font-medium">My Profile</span>
+            <span class="material-symbols-outlined text-lg flex-shrink-0">account_circle</span>
+            <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">My Profile</span>
         </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 w-full text-left">
-                <span class="material-symbols-outlined text-lg">logout</span>
-                <span class="text-sm font-medium">Logout</span>
+                <span class="material-symbols-outlined text-lg flex-shrink-0">logout</span>
+                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Logout</span>
             </button>
         </form>
     </div>
 </aside>
+@endauth
 
 <!-- Main wrapper -->
-<div class="md:ml-64 min-h-screen flex flex-col">
+<div class="{{ auth()->check() ? (auth()->user()->role === 'member' ? 'md:ml-20' : 'md:ml-64') : '' }} min-h-screen flex flex-col transition-all duration-300 ease-in-out">
 
     <!-- Top Bar -->
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200 shadow-sm">
         <div class="flex justify-between items-center px-6 h-16 max-w-7xl mx-auto">
             <div class="flex items-center gap-3">
+                @auth
                 <button class="md:hidden text-slate-600 hover:text-slate-900" onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
+                @endauth
                 <span class="text-lg font-title font-bold text-slate-800 tracking-wide">@yield('title', 'Chama Gold')</span>
             </div>
             
             <div class="flex items-center gap-4">
-                <span class="hidden sm:inline-block bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-3 py-1.5 rounded-xl">
+                @auth
+                <span class="hidden sm:inline-block bg-digital-blue-50 border border-digital-blue-200 text-digital-blue-700 text-xs font-semibold px-3 py-1.5 rounded-xl">
                     {{ auth()->user()->chama->name ?? 'Kenya Chama' }}
                 </span>
                 
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex items-center gap-2 text-slate-600 hover:text-slate-900 focus:outline-none py-1.5 px-2 rounded-xl hover:bg-slate-100 transition">
-                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-white flex items-center justify-center font-bold text-xs">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-digital-blue-500 to-digital-blue-600 text-white flex items-center justify-center font-bold text-xs">
                             {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                         </div>
                         <span class="text-xs font-semibold hidden md:inline">{{ auth()->user()->name }}</span>
@@ -334,6 +365,12 @@
                         </form>
                     </div>
                 </div>
+                @else
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-600 hover:text-slate-900 transition">Log in</a>
+                    <a href="{{ route('register') }}" class="text-xs font-bold gold-gradient-btn text-white px-4 py-2.5 rounded-xl shadow-sm">Get Started</a>
+                </div>
+                @endauth
             </div>
         </div>
     </header>
@@ -387,37 +424,41 @@
                 <span>© {{ date('Y') }} Safe &amp; Secure Bookkeeping</span>
             </div>
             <div class="flex gap-6">
-                <a href="#" class="hover:text-slate-800 transition">Privacy</a>
-                <a href="#" class="hover:text-slate-800 transition">Terms</a>
-                <a href="#" class="hover:text-slate-800 transition">Support</a>
+                <a href="{{ route('trust.info', ['tab' => 'privacy']) }}" class="hover:text-slate-800 transition">Privacy</a>
+                <a href="{{ route('trust.info', ['tab' => 'terms']) }}" class="hover:text-slate-800 transition">Terms</a>
+                <a href="{{ route('trust.info', ['tab' => 'support']) }}" class="hover:text-slate-800 transition">Support</a>
             </div>
         </div>
     </footer>
 </div>
 
+@auth
 <!-- Mobile Sidebar -->
 <div id="mobile-sidebar" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden md:hidden" onclick="if(event.target===this) this.classList.add('hidden')">
     <div class="bg-white w-72 h-full p-6 overflow-y-auto shadow-2xl flex flex-col border-r border-slate-200">
         <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 bg-gradient-to-br from-gold-500 to-gold-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">G</div>
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Chama Gold Logo" class="w-9 h-9 object-contain rounded-lg shadow-md border border-slate-100 flex-shrink-0" />
                 <span class="text-lg font-title font-extrabold text-slate-800">Chama Gold</span>
             </div>
             <button onclick="document.getElementById('mobile-sidebar').classList.add('hidden')" class="text-2xl text-slate-500 hover:text-slate-800">&times;</button>
         </div>
         <nav class="space-y-2 flex-1">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'dashboard' ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'dashboard' ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                 <span class="material-symbols-outlined">dashboard</span>Dashboard
             </a>
             
             @if(auth()->user()->role === 'member')
-                <a href="{{ route('member.contributions') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.contributions') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('member.contributions') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.contributions') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">payments</span>Contributions
                 </a>
-                <a href="{{ route('member.loans') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.loans') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('member.loans') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.loans') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">account_balance</span>Loans
                 </a>
-                <a href="{{ route('member.attendance') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.attendance') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('member.fines') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.fines') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
+                    <span class="material-symbols-outlined">gavel</span>Fines
+                </a>
+                <a href="{{ route('member.attendance') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.attendance') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">event_available</span>Attendance
                 </a>
             @endif
@@ -426,19 +467,22 @@
                 <div class="pt-4 pb-2 px-4">
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Admin</span>
                 </div>
-                <a href="{{ route('treasurer.meetings') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.meetings') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('treasurer.meetings') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.meetings') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">event_available</span>Meetings
                 </a>
-                <a href="{{ route('treasurer.sms-parser') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.sms-parser') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('treasurer.loans.pending') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.loans.pending') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
+                    <span class="material-symbols-outlined">account_balance</span>Loans
+                </a>
+                <a href="{{ route('treasurer.sms-parser') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.sms-parser') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">sms</span>SMS Parser
                 </a>
-                <a href="{{ route('treasurer.penalties') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.penalties') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('treasurer.penalties') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.penalties') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">gavel</span>Penalties
                 </a>
-                <a href="{{ route('reports.treasurer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'reports.treasurer') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('reports.treasurer') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'reports.treasurer') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">assessment</span>Reports
                 </a>
-                <a href="{{ route('treasurer.chama.config') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.chama.config') ? 'bg-amber-50 text-amber-800 font-bold' : '' }}">
+                <a href="{{ route('treasurer.chama.config') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.chama.config') ? 'bg-digital-blue-50 text-digital-blue-800 font-bold' : '' }}">
                     <span class="material-symbols-outlined">settings</span>Group Config
                 </a>
             @endif
@@ -448,8 +492,6 @@
 
 @php
     // Resolve active loan for the payment-type selector in the SMS modal.
-    // On the member dashboard $activeLoan is already computed by DashboardService,
-    // so we reuse it. On other member pages we do one lightweight query.
     $smsModalActiveLoan = $activeLoan ?? null;
     if (is_null($smsModalActiveLoan) && auth()->check() && auth()->user()->role === 'member') {
         $smsModalActiveLoan = \App\Models\Loan::where('user_id', auth()->id())
@@ -458,6 +500,7 @@
     }
 @endphp
 @include('partials.sms-modal', ['activeLoan' => $smsModalActiveLoan])
+@endauth
 
 @stack('scripts')
 </body>

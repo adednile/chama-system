@@ -18,18 +18,23 @@
                         primary: '#ffffff',
                         secondary: '#f8fafc',
                         gold: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            500: '#d97706',
-                            600: '#b45309',
-                            700: '#78350f',
+                            50: '#e5f0ff',
+                            100: '#cce0ff',
+                            200: '#99c2ff',
+                            300: '#66a3ff',
+                            400: '#3385ff',
+                            500: '#0066ff',
+                            600: '#0052cc',
+                            700: '#003d99',
+                            800: '#002966',
+                            900: '#001433',
+                            950: '#000e24',
                         },
                         brand: {
                             navy: '#f1f5f9',
                             dark: '#ffffff',
-                            gold: '#b45309',
-                            goldlight: '#d97706',
+                            gold: '#0052cc',
+                            goldlight: '#0066ff',
                             emerald: '#059669',
                             rose: '#e11d48',
                             slate: '#475569'
@@ -50,9 +55,15 @@
             color: #334155;
         }
         .hero-bg {
-            background: radial-gradient(circle at 70% 30%, rgba(217, 119, 6, 0.05) 0%, transparent 60%),
-                        radial-gradient(circle at 10% 80%, rgba(5, 150, 105, 0.02) 0%, transparent 50%),
-                        #f1f5f9;
+            background: url('/images/hero-bg.png') no-repeat center center;
+            background-size: cover;
+        }
+        .glass-hero-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
         }
         .premium-card {
             background: #ffffff;
@@ -60,20 +71,20 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
         }
         .gold-gradient-text {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .gold-btn {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
             color: #ffffff;
-            box-shadow: 0 4px 20px rgba(180, 83, 9, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 102, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .gold-btn:hover {
             transform: translateY(-2px);
             opacity: 0.95;
-            box-shadow: 0 6px 24px rgba(180, 83, 9, 0.3);
+            box-shadow: 0 6px 24px rgba(0, 102, 255, 0.3);
         }
         .pulse-emerald {
             animation: pulse-emerald-anim 2s infinite;
@@ -89,6 +100,56 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
         }
+        .fade-in-text {
+            animation: fadeInSlide 6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        .fade-in-text-slow {
+            animation: fadeInSlide 10s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .feature-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.4s ease,
+                        border-color 0.4s ease,
+                        box-shadow 0.4s ease;
+        }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card:hover {
+            background-color: #e5f0ff !important;
+            border-color: #99c2ff !important;
+            box-shadow: 0 20px 40px -15px rgba(0, 102, 255, 0.12) !important;
+        }
+        .feature-card .feature-desc-wrap {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.3s ease-out,
+                        margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-top: 0;
+        }
+        .feature-card:hover .feature-desc-wrap {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body class="font-sans antialiased selection:bg-gold-500/20 selection:text-gold-600">
@@ -96,18 +157,18 @@
     <!-- Header Navigation -->
     <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/60 transition-all">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="/" class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-md">G</div>
+            <a href="/" class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="Chama Gold Logo" class="w-10 h-10 object-contain rounded-xl shadow-md border border-slate-100" />
                 <div>
                     <span class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</span>
-                    <p class="text-[9px] text-gold-600 font-bold tracking-widest uppercase mt-0.5">Wealth &amp; Trust</p>
+                    <p class="text-[9px] text-[#b45309] font-bold tracking-widest uppercase mt-0.5">Wealth &amp; Trust</p>
                 </div>
             </a>
             
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-                <a href="#features" class="hover:text-slate-800 transition">Platform Features</a>
-                <a href="#benefits" class="hover:text-slate-800 transition">Chama Benefits</a>
-                <a href="#stats" class="hover:text-slate-800 transition">Impact &amp; Security</a>
+                <a href="#stats" class="hover:text-slate-800 transition">Impact</a>
+                <a href="#features" class="hover:text-slate-800 transition">Features</a>
+                <a href="#benefits" class="hover:text-slate-800 transition">Benefits</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -129,16 +190,12 @@
     <section class="hero-bg min-h-screen flex items-center pt-24 overflow-hidden relative">
         <div class="max-w-7xl mx-auto px-6 py-20 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            <div class="lg:col-span-7">
-                <div class="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 px-4 py-2 rounded-full text-xs font-semibold mb-6">
-                    <span class="w-2.5 h-2.5 bg-emerald-600 rounded-full pulse-emerald"></span>
-                    Smart Ledger System for Kenyan Chamas
-                </div>
+            <div class="lg:col-span-7 glass-hero-panel p-8 md:p-12 rounded-3xl">
                 <h1 class="text-4xl md:text-6xl font-title font-black text-slate-800 leading-[1.1] mb-6">
                     Wealth Building, <br>
                     <span class="gold-gradient-text">Automated &amp; Trusted.</span>
                 </h1>
-                <p class="text-lg text-slate-500 mb-8 max-w-xl leading-relaxed font-medium">
+                <p class="text-lg text-slate-500 mb-8 max-w-xl leading-relaxed font-medium fade-in-text">
                     Say goodbye to manual books, spreadsheets, and calculations. Automate your Chama’s ledger bookkeeping, credit scoring, late penalties, and M-Pesa SMS mapping.
                 </p>
                 
@@ -157,7 +214,7 @@
                     @endauth
                 </div>
 
-                <div class="mt-12 flex items-center gap-8">
+                <div class="mt-12 flex items-center gap-8 fade-in-text-slow">
                     <div class="flex -space-x-3">
                         <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center font-bold text-slate-600 text-xs">AM</div>
                         <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center font-bold text-slate-600 text-xs">KW</div>
@@ -222,35 +279,279 @@
         </div>
     </section>
 
+    <!-- Impact Section -->
+    <section id="stats" class="py-24 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <!-- Text Content -->
+            <div class="lg:col-span-6 space-y-6">
+                <div>
+                    <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Our Impact</h2>
+                    <h3 class="text-xl font-black text-slate-800 tracking-tight leading-none mb-4">Mission: "Tujenge Pamoja."</h3>
+                    <p class="text-3xl font-title font-extrabold text-slate-800 leading-tight">Impact on Kenyan Chamas</p>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-base text-slate-600 leading-relaxed font-medium">
+                        Chama Gold aims to increase efficiency in Kenyan Chamas by replacing error-prone manual bookkeeping with a secure, centralized digital ledger.
+                    </p>
+                    <p class="text-base text-slate-600 leading-relaxed font-medium">
+                        It automates transaction logging via an M-Pesa SMS parser, de-biases credit allocation using objective 1–10 credit scoring, and enforces financial discipline through an automated penalty engine.
+                    </p>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-4 pt-4">
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="99.9" data-suffix="%">0%</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Accuracy</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="10" data-suffix="x">0x</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Speedup</span>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center feature-card">
+                        <span class="block text-2xl font-black text-gold-600 font-title" data-target="0" data-suffix="">0</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Disputes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infographic Visual representation -->
+            <div class="lg:col-span-6">
+                <div class="premium-card feature-card p-6 md:p-8 rounded-3xl bg-white relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h4 class="font-title font-bold text-slate-800 text-lg">Chama Efficiency Trajectory</h4>
+                            <p class="text-xs text-slate-400 font-medium">Comparative analysis of manual vs. digital automation</p>
+                        </div>
+                        <span class="text-[10px] bg-emerald-50 border border-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">+75% Gain</span>
+                    </div>
+
+                    <!-- Line Chart Infographic (Pure CSS/SVG inline) -->
+                    <div class="relative w-full aspect-[4/3] min-h-[220px]">
+                        <svg class="w-full h-full" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#0066ff" stop-opacity="0.15"/>
+                                    <stop offset="100%" stop-color="#0066ff" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Horizontal Gridlines -->
+                            <line x1="50" y1="50" x2="450" y2="50" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="100" x2="450" y2="100" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="150" x2="450" y2="150" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="200" x2="450" y2="200" stroke="#f1f5f9" stroke-width="1.5" />
+                            <line x1="50" y1="250" x2="450" y2="250" stroke="#e2e8f0" stroke-width="1.5" />
+
+                            <!-- Y-Axis Labels -->
+                            <text x="25" y="54" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">100%</text>
+                            <text x="25" y="104" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">80%</text>
+                            <text x="25" y="154" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">60%</text>
+                            <text x="25" y="204" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">40%</text>
+                            <text x="25" y="254" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">20%</text>
+
+                            <!-- X-Axis Labels -->
+                            <text x="50" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 1</text>
+                            <text x="150" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 2</text>
+                            <text x="250" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 3</text>
+                            <text x="350" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 4</text>
+                            <text x="450" y="275" class="fill-slate-400 font-bold text-[9px]" text-anchor="middle">Month 5</text>
+
+                            <!-- Area shading -->
+                            <path d="M 50 200 L 150 170 Q 200 130, 250 80 L 350 60 L 450 45 L 450 250 L 50 250 Z" fill="url(#chartGradient)" />
+
+                            <!-- Manual ledger line -->
+                            <path d="M 50 220 L 150 215 C 190 215, 210 228, 250 210 L 350 220 L 450 205" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="4,4" />
+
+                            <!-- Chama Gold line -->
+                            <path d="M 50 200 L 150 170 Q 200 130, 250 80 L 350 60 L 450 45" fill="none" stroke="#0066ff" stroke-width="3.5" stroke-linecap="round" />
+
+                            <!-- Dot markers for Chama Gold -->
+                            <circle cx="50" cy="200" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="150" cy="170" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="250" cy="80" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="350" cy="60" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+                            <circle cx="450" cy="45" r="5" fill="#ffffff" stroke="#0066ff" stroke-width="2.5" />
+
+                            <!-- Dot markers for Manual -->
+                            <circle cx="50" cy="220" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="150" cy="215" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="250" cy="210" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="350" cy="220" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                            <circle cx="450" cy="205" r="4.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+                        </svg>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="flex justify-center gap-6 mt-4 text-[11px] font-bold text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-1.5 rounded-full bg-[#0066ff]"></span>
+                            <span>Chama Gold (Automated)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-0.5 bg-slate-400 border-t border-dashed border-slate-400"></span>
+                            <span>Traditional Chama (Manual)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section id="features" class="py-24 bg-white border-t border-slate-200/50">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center max-w-3xl mx-auto mb-20">
-                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Complete System Features</h2>
-                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">Designed Specifically for the Needs of Kenyan Chamas</p>
+                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Core Features</h2>
+                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">Tailored for Kenyan Chamas</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">Centralized Digital Ledger</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Immutable transaction mapping logging all member contributions, repayments, and penalties. Zero-variance balance integrity matches computed pool totals.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Centralized Digital Ledger</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Track all member contributions and loans in real-time, eliminating manual calculation errors and resolving group financial disputes instantly</p>
+                    </div>
                 </div>
                 
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">sms</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">SMS M-Pesa Parser</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Paste raw Safaricom M-Pesa SMS confirmation messages. The engine auto-extracts the amount, sender, date, and reference code for rapid ledger mapping.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">SMS M-Pesa Parser</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Save your treasurer hours of manual entry by instantly turning copied transaction texts into complete financial ledger records.</p>
+                    </div>
                 </div>
 
-                <div class="premium-card p-8 rounded-2xl">
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer">
                     <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">credit_score</span>
-                    <h3 class="text-lg font-bold font-title text-slate-800 mb-2">1-10 Credit Scoring Model</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed font-medium">Objective credit scoring calculated dynamically from savings consistency, repayment punctuality, and meeting attendance. Custom scoring weights.</p>
+                    <h3 class="text-lg font-bold font-title text-slate-800">1-10 Credit Scoring Model</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Calculate fair, objective loan limits for your members instantly based on their actual savings habits and meeting attendance.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-24 bg-slate-50 border-t border-slate-200/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-xs uppercase font-bold text-gold-600 tracking-widest mb-3">Chama Benefits</h2>
+                <p class="text-3xl md:text-4xl font-title font-extrabold text-slate-800">What do you stand to gain?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">error_outline</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Eliminate Manual Errors and Disputes</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Track group savings and loans automatically in real-time, completely replacing messy physical record books forever.</p>
+                    </div>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">schedule</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Save Administrative Time</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Reduce tedious data entry hours to seconds by instantly converting copied M-Pesa texts into records.</p>
+                    </div>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="premium-card feature-card p-8 rounded-2xl cursor-pointer bg-white">
+                    <span class="material-symbols-outlined text-4xl text-gold-500 mb-6" style="font-variation-settings: 'FILL' 1;">gavel</span>
+                    <h3 class="text-lg font-bold font-title text-slate-800">Ensure Fair and Objective Lending</h3>
+                    <div class="feature-desc-wrap">
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">Remove favoritism completely by instantly calculating customized, objective loan limits using credit scoring data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-sm text-slate-500 text-center">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="font-bold text-slate-800 tracking-wide font-title">Chama Gold &amp; Trust</span>
+                <span class="mx-2">·</span>
+                <span>© {{ date('Y') }} Safe &amp; Secure Bookkeeping</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="{{ route('trust.info', ['tab' => 'privacy']) }}" class="hover:text-slate-800 transition">Privacy</a>
+                <a href="{{ route('trust.info', ['tab' => 'terms']) }}" class="hover:text-slate-800 transition">Terms</a>
+                <a href="{{ route('trust.info', ['tab' => 'support']) }}" class="hover:text-slate-800 transition">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function animateCounter(el) {
+                const target = parseFloat(el.getAttribute('data-target'));
+                const suffix = el.getAttribute('data-suffix') || '';
+                const isFloat = target % 1 !== 0;
+                let current = 0;
+                const duration = 1500; // 1.5 seconds animation duration
+                const start = performance.now();
+                
+                function update(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = progress * (2 - progress); // Ease out quad
+                    
+                    current = ease * target;
+                    
+                    if (isFloat) {
+                        el.textContent = current.toFixed(1) + suffix;
+                    } else {
+                        el.textContent = Math.floor(current) + suffix;
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    } else {
+                        if (isFloat) {
+                            el.textContent = target.toFixed(1) + suffix;
+                        } else {
+                            el.textContent = target + suffix;
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(update);
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const cards = entry.target.querySelectorAll('.feature-card');
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('visible');
+                                // Trigger count up animation for children with data-target
+                                const counters = card.querySelectorAll('[data-target]');
+                                counters.forEach(counter => {
+                                    animateCounter(counter);
+                                });
+                            }, index * 200);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            const targetSections = document.querySelectorAll('#stats, #features, #benefits');
+            targetSections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </body>
 </html>

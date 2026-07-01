@@ -10,12 +10,12 @@
 
     <div class="premium-card rounded-2xl max-w-xl w-full mx-4 border border-slate-200 shadow-2xl relative overflow-hidden z-10 max-h-[90vh] overflow-y-auto"
          @click.stop>
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold-500 to-gold-600"></div>
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-digital-blue-500 to-digital-blue-600"></div>
 
         {{-- Header --}}
         <div class="flex items-center justify-between p-6 border-b border-slate-100">
             <h3 class="text-lg font-bold font-title text-slate-800 flex items-center gap-2">
-                <span class="material-symbols-outlined text-gold-500">sms</span> Parse M-Pesa SMS
+                <span class="material-symbols-outlined text-digital-blue-500">sms</span> Parse M-Pesa SMS
             </h3>
             <button @click="closeModal()" class="text-slate-500 hover:text-slate-800 text-2xl font-bold transition">&times;</button>
         </div>
@@ -25,8 +25,8 @@
             {{-- ── STEP 1: Input + payment type ─────────────────────────────── --}}
             <div x-show="!parsed">
 
-                {{-- Payment Type Selector (members only — treasurers set type at match step) --}}
-                @if(auth()->check() && auth()->user()->role === 'member')
+                {{-- Payment Type Selector --}}
+                @if(auth()->check() && (auth()->user()->role === 'member' || auth()->user()->role === 'treasurer'))
                 <div>
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">What is this payment for?</p>
                     <div class="grid grid-cols-2 gap-2">
@@ -34,7 +34,7 @@
                         <button type="button"
                                 @click="paymentType = 'contribution'; loanId = null"
                                 :class="paymentType === 'contribution'
-                                    ? 'border-amber-400 bg-amber-50 text-amber-800 ring-1 ring-amber-300'
+                                    ? 'border-digital-blue-400 bg-digital-blue-50 text-digital-blue-800 ring-1 ring-digital-blue-300'
                                     : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'"
                                 class="py-3 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center gap-1">
                             <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">savings</span>
@@ -48,8 +48,8 @@
                                     ? 'border-emerald-400 bg-emerald-50 text-emerald-800 ring-1 ring-emerald-300'
                                     : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'"
                                 class="py-3 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center gap-1
-                                       {{ !(isset($activeLoan) && $activeLoan) ? 'opacity-40 cursor-not-allowed' : '' }}"
-                                {{ !(isset($activeLoan) && $activeLoan) ? 'disabled title="No active loan to repay"' : '' }}>
+                                       {{ (auth()->user()->role !== 'treasurer' && !(isset($activeLoan) && $activeLoan)) ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                {{ (auth()->user()->role !== 'treasurer' && !(isset($activeLoan) && $activeLoan)) ? 'disabled title="No active loan to repay"' : '' }}>
                             <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">account_balance</span>
                             Loan Repayment
                         </button>
@@ -63,10 +63,12 @@
                         Loan #{{ $activeLoan->id }} &mdash; <span class="font-bold">KES {{ number_format($activeLoan->outstanding_balance, 2) }}</span>&nbsp;outstanding
                     </div>
                     @else
-                    <div x-show="paymentType === 'loan_repayment'"
-                         class="mt-2 p-2.5 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-800">
-                        You have no active loan. Please select <strong>Savings Contribution</strong>.
-                    </div>
+                        @if(auth()->user()->role !== 'treasurer')
+                        <div x-show="paymentType === 'loan_repayment'"
+                              class="mt-2 p-2.5 bg-digital-blue-50 border border-digital-blue-100 rounded-lg text-xs text-digital-blue-800">
+                            You have no active loan. Please select <strong>Savings Contribution</strong>.
+                        </div>
+                        @endif
                     @endif
                 </div>
                 @endif
@@ -75,12 +77,12 @@
                 <div>
                     <p class="text-xs text-slate-500 mb-2 font-medium">Paste the M-Pesa SMS notification below:</p>
                     <textarea x-model="smsText"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 h-32 focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 outline-none text-slate-800 text-sm transition-all resize-none"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 h-32 focus:ring-2 focus:ring-digital-blue-500/20 focus:border-digital-blue-500 outline-none text-slate-800 text-sm transition-all resize-none"
                         placeholder="e.g. QKX3B5T2R1 Confirmed. Ksh 5,000.00 received from ALICE WANJIKU 0712345678 on 2026-06-21..."></textarea>
                 </div>
 
                 <button @click="parseSms()"
-                        class="w-full py-3 bg-gradient-to-r from-gold-500 to-gold-600 hover:opacity-95 text-white font-bold rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2"
+                        class="w-full py-3 bg-gradient-to-r from-digital-blue-500 to-digital-blue-600 hover:opacity-95 text-white font-bold rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2"
                         :disabled="loading">
                     <span x-show="!loading" class="flex items-center gap-1">
                         <span class="material-symbols-outlined text-sm font-bold">search</span>
@@ -114,7 +116,7 @@
                     </div>
                     <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
                         <span class="text-slate-500 font-medium">Reference Code</span>
-                        <span class="font-mono text-gold-600 font-bold" x-text="parsedData.transaction_code || '—'"></span>
+                        <span class="font-mono text-digital-blue-600 font-bold" x-text="parsedData.transaction_code || '—'"></span>
                     </div>
                     <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
                         <span class="text-slate-500 font-medium">Date</span>
@@ -127,7 +129,7 @@
                         <span class="font-bold text-xs px-2 py-0.5 rounded-full border"
                               :class="paymentType === 'loan_repayment'
                                   ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                                  : 'bg-amber-50 border-amber-200 text-amber-700'"
+                                  : 'bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700'"
                               x-text="paymentType === 'loan_repayment' ? 'Loan Repayment' : 'Savings Contribution'">
                         </span>
                     </div>
@@ -136,12 +138,12 @@
 
                 <div class="flex gap-3">
                     <button @click="confirmRecord()"
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition flex-1 text-sm shadow-md flex items-center justify-center gap-1">
+                            class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold py-3 px-6 rounded-xl transition flex-1 text-sm shadow-sm flex items-center justify-center gap-1">
                         <span class="material-symbols-outlined text-sm font-bold">check</span>
                         Confirm &amp; Submit
                     </button>
                     <button @click="parsed = false; parsedData = {}"
-                            class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-xl transition text-sm">
+                            class="bg-digital-blue-50 hover:bg-digital-blue-100 border border-digital-blue-200 text-digital-blue-700 font-semibold py-3 px-6 rounded-xl transition text-sm">
                         Back
                     </button>
                 </div>

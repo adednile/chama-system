@@ -19,6 +19,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/trust', [DashboardController::class, 'trustInfo'])->name('trust.info');
+
 Route::middleware('auth')->group(function () {
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,6 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/member/loans', [LoanController::class, 'store'])->name('member.loans.store');
 
         Route::get('/member/attendance', [MeetingController::class, 'memberAttendance'])->name('member.attendance');
+        Route::get('/member/fines', [PenaltyController::class, 'memberFines'])->name('member.fines');
     });
 
     // Treasurer routes (secured with role:treasurer middleware)
@@ -56,6 +59,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/treasurer/chama/config', [ChamaConfigController::class, 'update'])->name('treasurer.chama.config.update');
 
         Route::get('/treasurer/meetings', [MeetingController::class, 'index'])->name('treasurer.meetings');
+        Route::get('/treasurer/meetings/export', [MeetingController::class, 'exportAttendance'])->name('treasurer.meetings.export');
         Route::post('/treasurer/meetings', [MeetingController::class, 'store'])->name('treasurer.meetings.store');
         Route::patch('/treasurer/meetings/{meeting}', [MeetingController::class, 'update'])->name('treasurer.meetings.update');
         Route::delete('/treasurer/meetings/{meeting}', [MeetingController::class, 'destroy'])->name('treasurer.meetings.destroy');
