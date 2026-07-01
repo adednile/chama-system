@@ -7,6 +7,29 @@
         @csrf
         @method('patch')
 
+        {{-- Read-only Chama Profile Stats --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 p-4 rounded-xl bg-slate-900 border border-slate-800 text-white">
+            <div>
+                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">Chama Group</span>
+                <span class="text-sm font-semibold text-gold-400">{{ $user->chama->name ?? 'None' }}</span>
+            </div>
+            <div>
+                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">System Role</span>
+                <span class="text-sm font-semibold capitalize text-slate-300">{{ $user->role ?? 'Guest' }}</span>
+            </div>
+            <div>
+                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wider">Account Status</span>
+                @php
+                    $statusColors = [
+                        'active'  => 'text-emerald-400 font-bold',
+                        'overdue' => 'text-rose-400 font-bold animate-pulse',
+                    ];
+                    $color = $statusColors[strtolower($user->account_status)] ?? 'text-slate-300';
+                @endphp
+                <span class="text-sm capitalize {{ $color }}">{{ $user->account_status ?? 'Active' }}</span>
+            </div>
+        </div>
+
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -35,6 +58,19 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('Phone Number (M-Pesa SMS Mapping)')" />
+            <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" placeholder="e.g. 254712345678" />
+            <p class="text-[10px] text-slate-400 mt-1">Must start with 254 or 0 (e.g. 254712345678). Used to match M-Pesa SMS records to your account.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div>
+            <x-input-label for="national_id" :value="__('National ID Number')" />
+            <x-text-input id="national_id" name="national_id" type="text" class="mt-1 block w-full" :value="old('national_id', $user->national_id)" placeholder="e.g. 12345678" />
+            <x-input-error class="mt-2" :messages="$errors->get('national_id')" />
         </div>
 
         <div class="flex items-center gap-4">
