@@ -262,6 +262,40 @@ class DemoTransactionSeeder extends Seeder
             'description' => 'Penalty for missing Meeting 5',
         ]);
 
+        // Helper to generate amortization schedules for seeded loans
+        $generateSchedule = function ($loan) {
+            $monthlyRate = ($loan->interest_rate / 100) / 12;
+            $months = $loan->term_months;
+            $principal = $loan->amount;
+
+            if ($monthlyRate > 0) {
+                $emi = $principal * $monthlyRate * pow(1 + $monthlyRate, $months) / (pow(1 + $monthlyRate, $months) - 1);
+            } else {
+                $emi = $principal / $months;
+            }
+
+            $balance = $principal;
+            $dueDate = Carbon::parse($loan->approved_at)->addMonth();
+
+            for ($i = 1; $i <= $months; $i++) {
+                $interest = $balance * $monthlyRate;
+                $principalPortion = $emi - $interest;
+                $balance -= $principalPortion;
+
+                \App\Models\AmortizationSchedule::create([
+                    'loan_id'           => $loan->id,
+                    'installment_no'    => $i,
+                    'due_date'          => $dueDate->toDateString(),
+                    'principal_portion' => round($principalPortion, 2),
+                    'interest_portion'  => round($interest, 2),
+                    'balance_after'     => max(round($balance, 2), 0),
+                    'payment_status'    => $loan->status === 'completed' ? 'paid' : ($i === 1 ? 'paid' : 'unpaid'),
+                ]);
+
+                $dueDate->addMonth();
+            }
+        };
+
         // 7. Seed Loans and Repayments
         // Member 1: Completed Loan (KES 15,000, 5% interest, 3 months, term completed)
         $loanM1 = Loan::create([
@@ -279,6 +313,7 @@ class DemoTransactionSeeder extends Seeder
             'outstanding_balance' => 0.00,
             'maturity_date' => Carbon::now()->subMonths(1),
         ]);
+        $generateSchedule($loanM1);
 
         // 3 repayments for Member 1's loan
         for ($i = 3; $i >= 1; $i--) {
@@ -305,6 +340,7 @@ class DemoTransactionSeeder extends Seeder
             'outstanding_balance' => 7000.00,
             'maturity_date' => Carbon::now()->subDays(10), // Passed maturity!
         ]);
+        $generateSchedule($loanM2);
 
         // Repayment history showing late/missed payment
         Repayment::create([

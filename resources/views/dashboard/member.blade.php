@@ -124,7 +124,7 @@
         </div>
 
         @php
-            $nextInstallment = $activeLoan ? $activeLoan->amortizationSchedule()->where('payment_status', 'pending')->orderBy('due_date')->first() : null;
+            $nextInstallment = $activeLoan ? $activeLoan->amortizationSchedule()->where('payment_status', 'unpaid')->orderBy('due_date')->first() : null;
         @endphp
         <!-- Outstanding Loan Balance Card (White, interactive if loan outstanding) -->
         <div @if($outstandingLoan > 0) onclick="openSmsModal(); event.stopPropagation();" @endif class="bg-white p-6 rounded-xl border border-digital-blue-100 card-shadow group hover:border-digital-blue-500 transition-all duration-300 flex flex-col justify-between @if($outstandingLoan > 0) cursor-pointer @endif relative overflow-hidden">
@@ -148,11 +148,22 @@
             @endif
 
             <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                @if($outstandingLoan > 0 && $activeLoan && $nextInstallment)
-                    <div class="text-xs text-secondary">
-                        <span class="text-[10px] text-slate-400 uppercase font-semibold">Next due:</span>
-                        <span class="font-bold text-slate-700">{{ $nextInstallment->due_date->format('d M Y') }}</span>
-                    </div>
+                @if($outstandingLoan > 0 && $activeLoan)
+                    @if($nextInstallment)
+                        <div class="text-xs text-secondary">
+                            <span class="text-[10px] text-slate-400 uppercase font-semibold">Next due:</span>
+                            <span class="font-bold text-slate-700">{{ $nextInstallment->due_date->format('d M Y') }}</span>
+                        </div>
+                    @else
+                        <div class="text-xs text-rose-600 font-semibold flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-rose-600 text-sm">warning</span>
+                            @if($activeLoan->status === 'overdue' || ($activeLoan->maturity_date && now()->gt($activeLoan->maturity_date)))
+                                Overdue
+                            @else
+                                Repayment Due
+                            @endif
+                        </div>
+                    @endif
                 @else
                     <div class="text-xs text-emerald-600 font-semibold flex items-center gap-1.5">
                         <span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>

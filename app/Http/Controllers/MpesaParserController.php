@@ -29,7 +29,7 @@ class MpesaParserController extends Controller
             ->pluck('id');
 
         $activeLoans = Loan::whereIn('user_id', $memberIds)
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'overdue'])
             ->get(['id', 'user_id', 'outstanding_balance', 'amount'])
             ->keyBy('user_id');
 
@@ -200,11 +200,11 @@ class MpesaParserController extends Controller
     ): JsonResponse {
         // Prefer the specified loan; fall back to any active loan for this member
         $loan = $loanId
-            ? Loan::where('id', $loanId)->where('user_id', $user->id)->where('status', 'active')->first()
+            ? Loan::where('id', $loanId)->where('user_id', $user->id)->whereIn('status', ['active', 'overdue'])->first()
             : null;
 
         if (!$loan) {
-            $loan = Loan::where('user_id', $user->id)->where('status', 'active')->first();
+            $loan = Loan::where('user_id', $user->id)->whereIn('status', ['active', 'overdue'])->first();
         }
 
         if (!$loan) {

@@ -32,7 +32,7 @@ class LoanController extends Controller
 
         $outstandingLoan = Loan::where('user_id', $user->id)
             ->where('chama_id', $user->chama_id)
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'overdue'])
             ->sum('outstanding_balance');
 
         $unpaidFines = \App\Models\Fine::where('user_id', $user->id)

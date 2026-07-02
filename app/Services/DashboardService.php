@@ -26,8 +26,8 @@ class DashboardService
 
         return [
             'totalSavings'       => Contribution::where('chama_id', $chamaId)->sum('amount'),
-            'activeLoans'        => Loan::where('chama_id', $chamaId)->where('status', 'active')->sum('outstanding_balance'),
-            'activeLoansCount'   => Loan::where('chama_id', $chamaId)->where('status', 'active')->count(),
+            'activeLoans'        => Loan::where('chama_id', $chamaId)->whereIn('status', ['active', 'overdue'])->sum('outstanding_balance'),
+            'activeLoansCount'   => Loan::where('chama_id', $chamaId)->whereIn('status', ['active', 'overdue'])->count(),
             'pendingApplications' => Loan::where('chama_id', $chamaId)->where('status', 'pending')->count(),
             'pendingLoanList'    => Loan::where('chama_id', $chamaId)->where('status', 'pending')->with('user')->latest()->get(),
             'totalFines'         => Fine::where('chama_id', $chamaId)->where('status', 'pending')->sum('amount'),
@@ -49,7 +49,7 @@ class DashboardService
 
         $outstandingLoan = Loan::where('user_id', $userId)
             ->where('chama_id', $chamaId)
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'overdue'])
             ->sum('outstanding_balance');
 
         $unpaidFines = Fine::where('user_id', $userId)
@@ -70,7 +70,7 @@ class DashboardService
 
         $activeLoan = Loan::where('user_id', $userId)
             ->where('chama_id', $chamaId)
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'overdue'])
             ->first();
 
         $pendingMpesa = \App\Models\MappedMpesaTransaction::where('user_id', $userId)

@@ -108,7 +108,7 @@ class CreditScoringEngine
      */
     private function repaymentHistory(User $user): float
     {
-        $loans = $user->loans()->whereIn('status', ['active', 'completed'])->get();
+        $loans = $user->loans()->whereIn('status', ['active', 'completed', 'overdue'])->get();
 
         if ($loans->isEmpty()) {
             return 10; // No history – assume perfect (or you can return 5 as neutral)

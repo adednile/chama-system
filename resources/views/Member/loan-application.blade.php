@@ -193,6 +193,7 @@
                             @php
                                 $statusColors = [
                                     'active'    => 'bg-emerald-100 text-emerald-800 border-emerald-200',
+                                    'overdue'   => 'bg-rose-100 text-rose-800 border-rose-200',
                                     'pending'   => 'bg-digital-blue-50 text-digital-blue-800 border-digital-blue-200',
                                     'completed' => 'bg-slate-100 text-slate-700 border-slate-200',
                                     'rejected'  => 'bg-rose-100 text-rose-800 border-rose-200',
@@ -207,7 +208,7 @@
                                 <span class="material-symbols-outlined text-rose-400 text-base cursor-help"
                                       title="{{ $loan->rejection_reason ?? 'Rejected by treasurer' }}">error_outline</span>
                                 @endif
-                                @if($loan->status === 'active')
+                                @if($loan->status === 'active' || $loan->status === 'overdue')
                                 <span class="text-[10px] text-slate-400 italic">Repay via SMS Parser</span>
                                 @endif
                             </div>

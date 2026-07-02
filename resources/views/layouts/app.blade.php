@@ -495,7 +495,7 @@
     $smsModalActiveLoan = $activeLoan ?? null;
     if (is_null($smsModalActiveLoan) && auth()->check() && auth()->user()->role === 'member') {
         $smsModalActiveLoan = \App\Models\Loan::where('user_id', auth()->id())
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'overdue'])
             ->first();
     }
 @endphp

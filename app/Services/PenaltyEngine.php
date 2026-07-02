@@ -73,7 +73,7 @@ class PenaltyEngine
     private function applyLateRepayments(Chama $chama): int
     {
         $count = 0;
-        $loans = $chama->loans()->where('status', 'active')->get();
+        $loans = $chama->loans()->whereIn('status', ['active', 'overdue'])->get();
 
         foreach ($loans as $loan) {
             // Find the earliest unpaid amortization schedule

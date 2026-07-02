@@ -53,7 +53,7 @@ class ContributionController extends Controller
 
         if ($paymentType === 'loan_repayment') {
             $activeLoan = Loan::where('user_id', Auth::id())
-                ->where('status', 'active')
+                ->whereIn('status', ['active', 'overdue'])
                 ->first();
 
             if (!$activeLoan) {
