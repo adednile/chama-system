@@ -283,7 +283,7 @@
                 @if($activeLoan)
                     @php
                         $totalDues = $activeLoan->amount * (1 + ($activeLoan->interest_rate / 100));
-                        $repaidDues = max($totalDues - $activeLoan->outstanding_balance, 0);
+                        $repaidDues = min($activeLoan->repayments()->sum('repayment_amount'), $totalDues);
                         $progress = $totalDues > 0 ? min(round(($repaidDues / $totalDues) * 100), 100) : 0;
                     @endphp
                     <div class="space-y-4">
