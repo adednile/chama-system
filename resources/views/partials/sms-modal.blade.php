@@ -111,8 +111,12 @@
                         <span class="font-bold text-slate-800 text-sm" x-text="'KES ' + parsedData.amount"></span>
                     </div>
                     <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
-                        <span class="text-slate-500 font-medium">Sender</span>
-                        <span class="text-slate-700 font-medium" x-text="parsedData.sender || '—'"></span>
+                        <span class="text-slate-500 font-medium">From</span>
+                        <span class="text-slate-700 font-medium font-semibold" x-text="getFromName()"></span>
+                    </div>
+                    <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
+                        <span class="text-slate-500 font-medium">To</span>
+                        <span class="text-slate-700 font-medium font-semibold" x-text="getToName()"></span>
                     </div>
                     <div class="flex justify-between items-center py-1 border-b border-slate-200/60">
                         <span class="text-slate-500 font-medium">Reference Code</span>
@@ -241,6 +245,22 @@
                     this.loading = false;
                     alert('Network error. Please try again.');
                 });
+            },
+
+            getFromName() {
+                if (!this.parsedData.sender) return '—';
+                if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
+                    return '{{ auth()->user()->role === "treasurer" ? "Chama Member" : auth()->user()->name }}';
+                }
+                return this.parsedData.sender;
+            },
+
+            getToName() {
+                if (!this.parsedData.sender) return '—';
+                if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
+                    return this.parsedData.sender.replace(/^to:\s*/i, '');
+                }
+                return '{{ auth()->user()->chama->name ?? "Chama" }}';
             },
 
             confirmRecord() {
