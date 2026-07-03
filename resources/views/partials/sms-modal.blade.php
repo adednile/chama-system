@@ -1,3 +1,6 @@
+@php
+    $pendingFines = auth()->check() ? auth()->user()->fines()->where('status', 'pending')->get() : collect();
+@endphp
 <div id="smsModal"
      class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50"
      style="align-items:center; justify-content:center;"
@@ -29,29 +32,42 @@
                 @if(auth()->check() && (auth()->user()->role === 'member' || auth()->user()->role === 'treasurer'))
                 <div>
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">What is this payment for?</p>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-3 gap-2">
                         {{-- Contribution button --}}
                         <button type="button"
-                                @click="paymentType = 'contribution'; loanId = null"
+                                @click="paymentType = 'contribution'; loanId = null; fineId = null"
                                 :class="paymentType === 'contribution'
                                     ? 'border-digital-blue-400 bg-digital-blue-50 text-digital-blue-800 ring-1 ring-digital-blue-300'
                                     : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'"
-                                class="py-3 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center gap-1">
+                                class="py-3 px-2 rounded-xl border text-[10px] font-bold transition-all flex flex-col items-center justify-center gap-1">
                             <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">savings</span>
-                            Savings Contribution
+                            Savings
                         </button>
 
                         {{-- Loan Repayment button --}}
                         <button type="button"
-                                @click="paymentType = 'loan_repayment'; loanId = {{ isset($activeLoan) && $activeLoan ? $activeLoan->id : 'null' }}"
+                                @click="paymentType = 'loan_repayment'; loanId = {{ isset($activeLoan) && $activeLoan ? $activeLoan->id : 'null' }}; fineId = null"
                                 :class="paymentType === 'loan_repayment'
                                     ? 'border-emerald-400 bg-emerald-50 text-emerald-800 ring-1 ring-emerald-300'
                                     : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'"
-                                class="py-3 px-3 rounded-xl border text-xs font-bold transition-all flex flex-col items-center gap-1
+                                class="py-3 px-2 rounded-xl border text-[10px] font-bold transition-all flex flex-col items-center justify-center gap-1
                                        {{ (auth()->user()->role !== 'treasurer' && !(isset($activeLoan) && $activeLoan)) ? 'opacity-40 cursor-not-allowed' : '' }}"
                                 {{ (auth()->user()->role !== 'treasurer' && !(isset($activeLoan) && $activeLoan)) ? 'disabled title="No active loan to repay"' : '' }}>
                             <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">account_balance</span>
-                            Loan Repayment
+                            Loan Repay
+                        </button>
+
+                        {{-- Fine Payment button --}}
+                        <button type="button"
+                                @click="paymentType = 'fine_payment'; loanId = null; fineId = '{{ $pendingFines->first()->id ?? '' }}'"
+                                :class="paymentType === 'fine_payment'
+                                    ? 'border-rose-400 bg-rose-50 text-rose-800 ring-1 ring-rose-300'
+                                    : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'"
+                                class="py-3 px-2 rounded-xl border text-[10px] font-bold transition-all flex flex-col items-center justify-center gap-1
+                                       {{ (auth()->user()->role !== 'treasurer' && $pendingFines->isEmpty()) ? 'opacity-40 cursor-not-allowed' : '' }}"
+                                {{ (auth()->user()->role !== 'treasurer' && $pendingFines->isEmpty()) ? 'disabled title="No pending fines to pay"' : '' }}>
+                            <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">gavel</span>
+                            Fine Repay
                         </button>
                     </div>
 
@@ -67,6 +83,25 @@
                         <div x-show="paymentType === 'loan_repayment'"
                               class="mt-2 p-2.5 bg-digital-blue-50 border border-digital-blue-100 rounded-lg text-xs text-digital-blue-800">
                             You have no active loan. Please select <strong>Savings Contribution</strong>.
+                        </div>
+                        @endif
+                    @endif
+
+                    {{-- Pending fines selector (shown when fine_payment is selected and member has pending fines) --}}
+                    @if($pendingFines->isNotEmpty())
+                    <div x-show="paymentType === 'fine_payment'" class="mt-2 flex flex-col gap-1">
+                        <label for="modalFineId" class="text-[10px] text-slate-400 uppercase font-semibold">Select Pending Fine</label>
+                        <select x-model="fineId" id="modalFineId" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 outline-none text-slate-800 text-xs transition-all focus:ring-2 focus:ring-digital-blue-500">
+                            @foreach($pendingFines as $fine)
+                                <option value="{{ $fine->id }}">{{ $fine->description ?? ucfirst(str_replace('_', ' ', $fine->type)) }} — KES {{ number_format($fine->amount, 2) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @else
+                        @if(auth()->user()->role !== 'treasurer')
+                        <div x-show="paymentType === 'fine_payment'"
+                              class="mt-2 p-2.5 bg-rose-50 border border-rose-100 rounded-lg text-xs text-rose-800 font-medium">
+                            You have no pending fines. Please select <strong>Savings Contribution</strong>.
                         </div>
                         @endif
                     @endif
@@ -129,8 +164,8 @@
                         <span class="font-bold text-xs px-2 py-0.5 rounded-full border"
                               :class="paymentType === 'loan_repayment'
                                   ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                                  : 'bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700'"
-                              x-text="paymentType === 'loan_repayment' ? 'Loan Repayment' : 'Savings Contribution'">
+                                  : (paymentType === 'fine_payment' ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700')"
+                              x-text="paymentType === 'loan_repayment' ? 'Loan Repayment' : (paymentType === 'fine_payment' ? 'Fine Payment' : 'Savings Contribution')">
                         </span>
                     </div>
                     @endif
@@ -165,6 +200,7 @@
         // Active loan context set by server; used to smart-default the payment type.
         const hasActiveLoan = {{ (isset($activeLoan) && $activeLoan) ? 'true' : 'false' }};
         const activeLoanId  = {{ (isset($activeLoan) && $activeLoan) ? $activeLoan->id : 'null' }};
+        const firstFineId   = '{{ $pendingFines->first()->id ?? '' }}';
 
         return {
             isOpen:      false,
@@ -174,11 +210,13 @@
             parsedData:  {},
             paymentType: hasActiveLoan ? 'loan_repayment' : 'contribution',
             loanId:      hasActiveLoan ? activeLoanId : null,
+            fineId:      firstFineId || null,
 
             openModal() {
                 // Reset to smart default each time the modal opens
                 this.paymentType = hasActiveLoan ? 'loan_repayment' : 'contribution';
                 this.loanId      = hasActiveLoan ? activeLoanId : null;
+                this.fineId      = firstFineId || null;
                 this.smsText     = '';
                 this.loading     = false;
                 this.parsed      = false;
@@ -225,6 +263,7 @@
                         message:      this.smsText,
                         payment_type: this.paymentType,
                         loan_id:      this.loanId,
+                        fine_id:      this.fineId,
                     }),
                 })
                 .then(r => r.json().then(data => ({ ok: r.ok, data })))
@@ -244,7 +283,7 @@
             },
 
             confirmRecord() {
-                const typeLabel = this.paymentType === 'loan_repayment' ? 'loan repayment' : 'contribution';
+                const typeLabel = this.paymentType === 'loan_repayment' ? 'loan repayment' : (this.paymentType === 'fine_payment' ? 'fine payment' : 'contribution');
                 @if(auth()->check() && auth()->user()->role === 'treasurer')
                     alert('M-Pesa SMS queued for member matching in the SMS Parser.');
                 @else

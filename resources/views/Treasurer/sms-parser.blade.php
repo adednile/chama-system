@@ -185,6 +185,7 @@
                         class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-digital-blue-500 focus:border-digital-blue-500 outline-none text-on-surface text-sm transition-all">
                     <option value="contribution">💰 Savings Contribution</option>
                     <option value="loan_repayment">🏦 Loan Repayment</option>
+                    <option value="fine_payment">⚖️ Fine Payment</option>
                 </select>
             </div>
 
@@ -197,6 +198,19 @@
             {{-- Warning when loan_repayment selected but member has no active loan --}}
             <div id="noLoanWarning" class="hidden p-3 bg-rose-50 border border-rose-100 rounded-xl text-xs text-rose-800 font-medium">
                 ⚠️ This member has no active loan. Please select <strong>Savings Contribution</strong>.
+            </div>
+
+            {{-- Pending fines selector (shown when fine_payment is selected and member has pending fines) --}}
+            <div id="pendingFinesInfo" class="hidden flex-col gap-2">
+                <label for="matchFineId" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Select Pending Fine</label>
+                <select id="matchFineId"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-digital-blue-500 focus:border-digital-blue-500 outline-none text-on-surface text-sm transition-all">
+                </select>
+            </div>
+
+            {{-- Warning when fine_payment selected but member has no pending fines --}}
+            <div id="noFineWarning" class="hidden p-3 bg-rose-50 border border-rose-100 rounded-xl text-xs text-rose-800 font-medium">
+                ⚠️ This member has no pending fines. Please select <strong>Savings Contribution</strong>.
             </div>
 
             {{-- Actions --}}
@@ -222,6 +236,12 @@
             'id'                  => $m->active_loan->id,
             'outstanding_balance' => number_format($m->active_loan->outstanding_balance, 2),
         ] : null,
+        'pending_fines' => $m->pending_fines->map(fn($f) => [
+            'id'          => $f->id,
+            'amount'      => number_format($f->amount, 2),
+            'type'        => $f->type,
+            'description' => $f->description,
+        ])->values()->all(),
     ])->values()->toJson();
 @endphp
 
@@ -285,24 +305,40 @@
         updateActiveLoanDisplay(memberId);
     }
 
-    // ── Show/hide active loan info based on current selections ───────────────
+    // ── Show/hide active loan/fine info based on current selections ───────────────
     function updateActiveLoanDisplay(memberId) {
         const paymentType = document.getElementById('matchPaymentType').value;
         const member = membersData.find(m => m.id == memberId);
 
         hideActiveLoanInfo();
+        hidePendingFinesInfo();
 
-        if (paymentType !== 'loan_repayment') return;
-
-        if (member && member.active_loan) {
-            currentLoanId = member.active_loan.id;
-            document.getElementById('activeLoanDetails').innerText =
-                `Loan #${member.active_loan.id} — KES ${member.active_loan.outstanding_balance} remaining`;
-            document.getElementById('activeLoanInfo').classList.remove('hidden');
-            document.getElementById('activeLoanInfo').classList.add('flex');
-        } else if (member && !member.active_loan) {
-            currentLoanId = null;
-            document.getElementById('noLoanWarning').classList.remove('hidden');
+        if (paymentType === 'loan_repayment') {
+            if (member && member.active_loan) {
+                currentLoanId = member.active_loan.id;
+                document.getElementById('activeLoanDetails').innerText =
+                    `Loan #${member.active_loan.id} — KES ${member.active_loan.outstanding_balance} remaining`;
+                document.getElementById('activeLoanInfo').classList.remove('hidden');
+                document.getElementById('activeLoanInfo').classList.add('flex');
+            } else if (member && !member.active_loan) {
+                currentLoanId = null;
+                document.getElementById('noLoanWarning').classList.remove('hidden');
+            }
+        } else if (paymentType === 'fine_payment') {
+            if (member && member.pending_fines && member.pending_fines.length > 0) {
+                const fineSelect = document.getElementById('matchFineId');
+                fineSelect.innerHTML = '';
+                member.pending_fines.forEach(fine => {
+                    const opt = document.createElement('option');
+                    opt.value = fine.id;
+                    opt.innerText = `${fine.description || fine.type} — KES ${fine.amount}`;
+                    fineSelect.appendChild(opt);
+                });
+                document.getElementById('pendingFinesInfo').classList.remove('hidden');
+                document.getElementById('pendingFinesInfo').classList.add('flex');
+            } else if (member) {
+                document.getElementById('noFineWarning').classList.remove('hidden');
+            }
         }
     }
 
@@ -311,6 +347,12 @@
         document.getElementById('activeLoanInfo').classList.add('hidden');
         document.getElementById('activeLoanInfo').classList.remove('flex');
         document.getElementById('noLoanWarning').classList.add('hidden');
+    }
+
+    function hidePendingFinesInfo() {
+        document.getElementById('pendingFinesInfo').classList.add('hidden');
+        document.getElementById('pendingFinesInfo').classList.remove('flex');
+        document.getElementById('noFineWarning').classList.add('hidden');
     }
 
     // ── Submit the match ──────────────────────────────────────────────────────
@@ -328,6 +370,15 @@
             return;
         }
 
+        let fineId = null;
+        if (paymentType === 'fine_payment') {
+            fineId = document.getElementById('matchFineId').value;
+            if (!fineId) {
+                alert('Please select a fine first.');
+                return;
+            }
+        }
+
         fetch(`/treasurer/sms-parser/${currentMatchTxId}/match`, {
             method: 'POST',
             headers: {
@@ -338,6 +389,7 @@
                 user_id:      memberId,
                 payment_type: paymentType,
                 loan_id:      currentLoanId,
+                fine_id:      fineId,
             }),
         })
         .then(r => r.json())

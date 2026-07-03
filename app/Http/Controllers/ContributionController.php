@@ -25,8 +25,8 @@ class ContributionController extends Controller
     {
         $data = $request->validate([
             'message'      => ['required', 'string'],
-            'payment_type' => ['sometimes', 'in:contribution,loan_repayment'],
-            // loan_id is derived server-side; we ignore any client-supplied value to prevent spoofing
+            'payment_type' => ['sometimes', 'in:contribution,loan_repayment,fine_payment'],
+            'fine_id'      => ['sometimes', 'nullable', 'exists:fines,id'],
         ]);
 
         $parsed = $parser->parse($data['message']);
@@ -50,6 +50,7 @@ class ContributionController extends Controller
 
         $paymentType = $data['payment_type'] ?? 'contribution';
         $loanId      = null;
+        $fineId      = null;
 
         if ($paymentType === 'loan_repayment') {
             $activeLoan = Loan::where('user_id', Auth::id())
@@ -65,6 +66,28 @@ class ContributionController extends Controller
             $loanId = $activeLoan->id;
         }
 
+        if ($paymentType === 'fine_payment') {
+            $fine = null;
+            if ($request->input('fine_id')) {
+                $fine = \App\Models\Fine::where('id', $request->input('fine_id'))
+                    ->where('user_id', Auth::id())
+                    ->where('status', 'pending')
+                    ->first();
+            } else {
+                $fine = \App\Models\Fine::where('user_id', Auth::id())
+                    ->where('status', 'pending')
+                    ->first();
+            }
+
+            if (!$fine) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No pending fine found on your account. Please submit this as a Savings Contribution.',
+                ], 422);
+            }
+            $fineId = $fine->id;
+        }
+
         MappedMpesaTransaction::create([
             'user_id'          => Auth::id(),
             'amount'           => $parsed['amount'],
@@ -74,6 +97,7 @@ class ContributionController extends Controller
             'status'           => 'unmapped',
             'payment_type'     => $paymentType,
             'loan_id'          => $loanId,
+            'fine_id'          => $fineId,
         ]);
 
         return response()->json([
@@ -84,6 +108,7 @@ class ContributionController extends Controller
                 'transaction_code' => $parsed['transaction_code'],
                 'date'             => $parsed['date'] ?? now()->toDateString(),
                 'payment_type'     => $paymentType,
+                'fine_id'          => $fineId,
             ],
         ]);
     }

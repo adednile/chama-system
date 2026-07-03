@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AmortizationSchedule;
 use App\Models\Contribution;
+use App\Models\Fine;
 use App\Models\Loan;
 use App\Models\MappedMpesaTransaction;
 use App\Models\Repayment;
@@ -23,7 +24,7 @@ class MpesaParserController extends Controller
             $query->where('chama_id', Auth::user()->chama_id);
         })->with('user', 'loan')->latest()->get();
 
-        // Load members with their active loan in 2 queries (no N+1)
+        // Load members with their active loan and pending fines in 3 queries (no N+1)
         $memberIds = User::where('role', 'member')
             ->where('chama_id', Auth::user()->chama_id)
             ->pluck('id');
@@ -33,11 +34,17 @@ class MpesaParserController extends Controller
             ->get(['id', 'user_id', 'outstanding_balance', 'amount'])
             ->keyBy('user_id');
 
+        $pendingFines = Fine::whereIn('user_id', $memberIds)
+            ->where('status', 'pending')
+            ->get(['id', 'user_id', 'amount', 'type', 'description'])
+            ->groupBy('user_id');
+
         $members = User::whereIn('id', $memberIds)
             ->orderBy('name')
             ->get()
-            ->map(function ($member) use ($activeLoans) {
+            ->map(function ($member) use ($activeLoans, $pendingFines) {
                 $member->active_loan = $activeLoans->get($member->id);
+                $member->pending_fines = $pendingFines->get($member->id) ?? collect();
                 return $member;
             });
 
@@ -48,7 +55,9 @@ class MpesaParserController extends Controller
     {
         $data = $request->validate([
             'message'      => ['required', 'string'],
-            'payment_type' => ['nullable', 'string', 'in:contribution,loan_repayment'],
+            'payment_type' => ['nullable', 'string', 'in:contribution,loan_repayment,fine_payment'],
+            'loan_id'      => ['nullable', 'integer', 'exists:loans,id'],
+            'fine_id'      => ['nullable', 'integer', 'exists:fines,id'],
         ]);
 
         $parsed = $parser->parse($data['message']);
@@ -78,6 +87,8 @@ class MpesaParserController extends Controller
             'message'          => $parsed['message'],
             'status'           => 'unmapped',
             'payment_type'     => $data['payment_type'] ?? 'contribution',
+            'loan_id'          => $data['loan_id'] ?? null,
+            'fine_id'          => $data['fine_id'] ?? null,
         ]);
 
         return response()->json([
@@ -106,8 +117,9 @@ class MpesaParserController extends Controller
 
         $data = $request->validate([
             'user_id'      => ['required', 'exists:users,id'],
-            'payment_type' => ['sometimes', 'in:contribution,loan_repayment'],
+            'payment_type' => ['sometimes', 'in:contribution,loan_repayment,fine_payment'],
             'loan_id'      => ['sometimes', 'nullable', 'exists:loans,id'],
+            'fine_id'      => ['sometimes', 'nullable', 'exists:fines,id'],
         ]);
 
         if ($tx->status !== 'unmapped') {
@@ -123,6 +135,11 @@ class MpesaParserController extends Controller
 
         if ($paymentType === 'loan_repayment') {
             return $this->applyAsLoanRepayment($tx, $user, $loanId, $ledgerService);
+        }
+
+        if ($paymentType === 'fine_payment') {
+            $fineId = $request->input('fine_id') ?? $tx->fine_id ?? null;
+            return $this->applyAsFinePayment($tx, $user, $fineId, $ledgerService);
         }
 
         return $this->applyAsContribution($tx, $user, $ledgerService);
@@ -268,6 +285,57 @@ class MpesaParserController extends Controller
         return response()->json([
             'success' => true,
             'message' => "KES " . number_format($amountPaid, 2) . " applied as loan repayment for {$user->name}.{$statusNote}",
+        ]);
+    }
+
+    private function applyAsFinePayment(
+        MappedMpesaTransaction $tx,
+        User $user,
+        ?int $fineId,
+        LedgerService $ledgerService
+    ): JsonResponse {
+        $fine = $fineId
+            ? Fine::where('id', $fineId)->where('user_id', $user->id)->where('status', 'pending')->first()
+            : null;
+
+        if (!$fine) {
+            $fine = Fine::where('user_id', $user->id)->where('status', 'pending')->first();
+        }
+
+        if (!$fine) {
+            return response()->json([
+                'success' => false,
+                'message' => "{$user->name} has no pending fines. Please apply this payment as a Savings Contribution instead.",
+            ], 422);
+        }
+
+        $amountPaid = round((float) $tx->amount, 2);
+
+        // Mark the fine as paid
+        $fine->status = 'paid';
+        $fine->paid_at = now();
+        $fine->save();
+
+        // Record the transaction
+        $ledgerService->record(
+            'fine_paid',
+            $user->id,
+            $user->chama_id,
+            $amountPaid,
+            'Fine payment via M-Pesa SMS - ' . ($fine->description ?? 'Penalty'),
+            $tx->transaction_code
+        );
+
+        $tx->update([
+            'status'       => 'mapped',
+            'user_id'      => $user->id,
+            'payment_type' => 'fine_payment',
+            'fine_id'      => $fine->id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "KES " . number_format($amountPaid, 2) . " applied as fine payment for {$user->name}.",
         ]);
     }
 }
