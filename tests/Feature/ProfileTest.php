@@ -30,6 +30,8 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
+                'phone' => '254712345678',
+                'national_id' => '12345678',
             ]);
 
         $response
@@ -40,7 +42,25 @@ class ProfileTest extends TestCase
 
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
+        $this->assertSame('254712345678', $user->phone);
+        $this->assertSame('12345678', $user->national_id);
         $this->assertNull($user->email_verified_at);
+    }
+
+    public function test_profile_validation_rejects_invalid_phone_formats(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'phone' => '12345', // invalid format
+                'national_id' => '12345678',
+            ]);
+
+        $response->assertSessionHasErrors(['phone']);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
