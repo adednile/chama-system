@@ -40,12 +40,14 @@ class MeetingAttendanceTest extends TestCase
             'name' => 'Member One',
             'role' => 'member',
             'chama_id' => $this->chama->id,
+            'created_at' => now()->subDays(30),
         ]);
 
         $this->member2 = User::factory()->create([
             'name' => 'Member Two',
             'role' => 'member',
             'chama_id' => $this->chama->id,
+            'created_at' => now()->subDays(30),
         ]);
     }
 
@@ -205,5 +207,51 @@ class MeetingAttendanceTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseMissing('meetings', ['id' => $meeting->id]);
         $this->assertDatabaseMissing('attendances', ['meeting_id' => $meeting->id]);
+    }
+
+    public function test_late_joining_member_attendance_metric_ignores_past_meetings(): void
+    {
+        // Create a meeting held 5 days ago (before new member joined)
+        Meeting::create([
+            'chama_id' => $this->chama->id,
+            'meeting_date' => now()->subDays(5)->toDateString(),
+            'meeting_type' => 'regular',
+        ]);
+
+        // Create a member who joined yesterday (1 day ago)
+        $lateMember = User::factory()->create([
+            'role' => 'member',
+            'chama_id' => $this->chama->id,
+            'created_at' => now()->subDays(1),
+        ]);
+
+        // Create a meeting held today (after member joined)
+        $todayMeeting = Meeting::create([
+            'chama_id' => $this->chama->id,
+            'meeting_date' => now()->toDateString(),
+            'meeting_type' => 'regular',
+        ]);
+
+        // Mark the member present today
+        Attendance::create([
+            'meeting_id' => $todayMeeting->id,
+            'user_id' => $lateMember->id,
+            'present' => true,
+        ]);
+
+        // Verify their attendance score in CreditScoringEngine is 10.0
+        $engine = new CreditScoringEngine();
+        
+        $refClass = new \ReflectionClass($engine);
+        $method = $refClass->getMethod('attendanceScore');
+        $method->setAccessible(true);
+        $attendanceScore = $method->invoke($engine, $lateMember);
+
+        $this->assertEquals(10.0, $attendanceScore);
+
+        // Verify the reliability in the controller matches
+        $response = $this->actingAs($lateMember)->get('/member/attendance');
+        $response->assertStatus(200);
+        $response->assertViewHas('reliability', 100.0);
     }
 }

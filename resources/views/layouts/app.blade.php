@@ -6,153 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Chama Gold & Trust')</title>
 
-    <!-- Tailwind + Fonts -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Local Assets via Vite (Tailwind CSS & Alpine.js compiled offline) -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Fonts (Google CDN with local fallbacks) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    
-    <!-- Custom Tailwind Configuration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        // Stitch UI Tokens
-                        "surface-container-highest": "#d3e4fe",
-                        "on-primary-fixed": "#2f1500",
-                        "surface-container-lowest": "#ffffff",
-                        "primary-fixed-dim": "#ffb77d",
-                        "surface-bright": "#f8f9ff",
-                        "surface-container-low": "#eff4ff",
-                        "on-secondary-container": "#5c647a",
-                        "primary": "#8d4b00",
-                        "surface-dim": "#cbdbf5",
-                        "on-tertiary-fixed-variant": "#005137",
-                        "on-background": "#0b1c30",
-                        "inverse-surface": "#213145",
-                        "on-tertiary-fixed": "#002114",
-                        "error": "#ba1a1a",
-                        "inverse-on-surface": "#eaf1ff",
-                        "tertiary-fixed": "#85f8c4",
-                        "background": "#f8f9ff",
-                        "on-surface": "#0b1c30",
-                        "secondary-fixed": "#dae2fd",
-                        "tertiary-container": "#00855d",
-                        "secondary-container": "#dae2fd",
-                        "surface-container-high": "#dce9ff",
-                        "surface-tint": "#904d00",
-                        "inverse-primary": "#ffb77d",
-                        "on-secondary-fixed-variant": "#3f465c",
-                        "on-tertiary": "#ffffff",
-                        "primary-fixed": "#ffdcc3",
-                        "on-tertiary-container": "#f5fff7",
-                        "on-error": "#ffffff",
-                        "outline-variant": "#dbc2b0",
-                        "error-container": "#ffdad6",
-                        "on-primary-fixed-variant": "#6e3900",
-                        "on-primary": "#ffffff",
-                        "on-primary-container": "#fffbff",
-                        "secondary-fixed-dim": "#bec6e0",
-                        "secondary": "#565e74",
-                        "primary-container": "#b15f00",
-                        "on-surface-variant": "#554336",
-                        "on-secondary": "#ffffff",
-                        "on-secondary-fixed": "#131b2e",
-                        "surface-container": "#e5eeff",
-                        "tertiary-fixed-dim": "#68dba9",
-                        "outline": "#887364",
-                        "surface": "#f8f9ff",
-                        "surface-variant": "#d3e4fe",
-                        "tertiary": "#006948",
-                        "on-error-container": "#93000a",
-                        "slate-custom": "#f1f5f9",
-                        "gold-gradient-start": "#0066ff",
-                        "gold-gradient-end": "#0052cc",
-
-                        "digital-blue": {
-                            "50": "#e5f0ff",
-                            "100": "#cce0ff",
-                            "200": "#99c2ff",
-                            "300": "#66a3ff",
-                            "400": "#3385ff",
-                            "500": "#0066ff",
-                            "600": "#0052cc",
-                            "700": "#003d99",
-                            "800": "#002966",
-                            "900": "#001433",
-                            "950": "#000e24"
-                        },
-
-                        // Legacy compatibility tokens
-                        gold: {
-                            50: '#e5f0ff',
-                            100: '#cce0ff',
-                            200: '#99c2ff',
-                            300: '#66a3ff',
-                            400: '#3385ff',
-                            500: '#0066ff',
-                            600: '#0052cc',
-                            700: '#003d99',
-                            800: '#002966',
-                            900: '#001433',
-                            950: '#000e24',
-                        },
-                        brand: {
-                            navy: '#f1f5f9',
-                            dark: '#ffffff',
-                            gold: '#0052cc',
-                            goldlight: '#0066ff',
-                            emerald: '#059669',
-                            rose: '#e11d48',
-                            slate: '#475569'
-                        }
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    spacing: {
-                        "container-max": "1280px",
-                        "stack-sm": "0.5rem",
-                        "gutter": "1.5rem",
-                        "margin-desktop": "2.5rem",
-                        "stack-md": "1rem",
-                        "stack-xs": "0.25rem",
-                        "margin-mobile": "1rem",
-                        "stack-lg": "2rem"
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        title: ['Outfit', 'sans-serif'],
-                        "label-md": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "headline-lg": ["Outfit"],
-                        "headline-lg-mobile": ["Outfit"],
-                        "headline-md": ["Outfit"],
-                        "headline-xl": ["Outfit"],
-                        "body-md": ["Inter"]
-                    },
-                    fontSize: {
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
-                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Alpine.js CDN -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
+        @font-face {
+            font-family: 'Material Symbols Outlined';
+            font-style: normal;
+            font-weight: 100 700;
+            src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
+        }
         [x-cloak] { display: none !important; }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -242,11 +108,11 @@
 
 @auth
 <!-- Sidebar -->
-<aside class="h-screen fixed left-0 top-0 bg-white border-r border-slate-200 z-40 hidden md:flex flex-col py-6 px-4 shadow-sm transition-all duration-300 group ease-in-out {{ auth()->user()->role === 'member' ? 'w-20 hover:w-64' : 'w-64' }}">
+<aside class="h-screen fixed left-0 top-0 bg-white border-r border-slate-200 z-40 hidden md:flex flex-col py-6 px-4 shadow-sm transition-all duration-300 group ease-in-out w-20 hover:w-64">
     <div class="mb-8 px-3">
         <a href="/" class="flex items-center gap-3">
             <img src="{{ asset('images/logo.png') }}" alt="Chama Gold Logo" class="w-10 h-10 object-contain rounded-xl shadow-md border border-slate-100 flex-shrink-0" />
-            <div class="{{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : 'opacity-100' }}">
+            <div class="{{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : 'opacity-100' }}">
                 <h1 class="text-lg font-title font-extrabold text-slate-800 tracking-tight leading-none">Chama Gold</h1>
                 <p class="text-[10px] text-[#b45309] font-semibold tracking-widest uppercase mt-1">Wealth &amp; Trust</p>
             </div>
@@ -259,55 +125,55 @@
         @endphp
         <a href="{{ route('dashboard') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'dashboard' ? 'active' : '' }}">
             <span class="material-symbols-outlined text-lg flex-shrink-0">dashboard</span>
-            <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Dashboard</span>
+            <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Dashboard</span>
         </a>
         
         @if(auth()->user()->role === 'member')
             <a href="{{ route('member.contributions') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.contributions') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">payments</span>
-                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Contributions</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Contributions</span>
             </a>
             <a href="{{ route('member.loans') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.loans') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">account_balance</span>
-                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Loans</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Loans</span>
             </a>
             <a href="{{ route('member.fines') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.fines') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">gavel</span>
-                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Fines</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Fines</span>
             </a>
             <a href="{{ route('member.attendance') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'member.attendance') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">event_available</span>
-                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Attendance</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Attendance</span>
             </a>
         @endif
 
         @if(auth()->user()->role === 'treasurer')
-            <div class="pt-4 pb-2 px-4">
+            <div class="pt-4 pb-2 px-4 {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Administration</span>
             </div>
             <a href="{{ route('treasurer.meetings') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.meetings') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">event_available</span>
-                <span class="text-sm font-medium">Meetings</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Meetings</span>
             </a>
             <a href="{{ route('treasurer.loans.pending') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.loans.pending') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">account_balance</span>
-                <span class="text-sm font-medium">Loans</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Loans</span>
             </a>
             <a href="{{ route('treasurer.sms-parser') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.sms-parser') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">sms</span>
-                <span class="text-sm font-medium">SMS Parser</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">SMS Parser</span>
             </a>
             <a href="{{ route('treasurer.penalties') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.penalties') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">gavel</span>
-                <span class="text-sm font-medium">Penalties</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Penalties</span>
             </a>
             <a href="{{ route('reports.treasurer') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'reports.treasurer') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">assessment</span>
-                <span class="text-sm font-medium">Reports</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Reports</span>
             </a>
             <a href="{{ route('treasurer.chama.config') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ str_starts_with($currentRoute, 'treasurer.chama.config') ? 'active' : '' }}">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">settings</span>
-                <span class="text-sm font-medium">Group Config</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Group Config</span>
             </a>
         @endif
     </nav>
@@ -315,13 +181,13 @@
     <div class="mt-auto pt-6 border-t border-slate-100 space-y-1">
         <a href="{{ route('profile.edit') }}" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 {{ $currentRoute == 'profile.edit' ? 'active' : '' }}">
             <span class="material-symbols-outlined text-lg flex-shrink-0">account_circle</span>
-            <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">My Profile</span>
+            <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">My Profile</span>
         </a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 w-full text-left">
                 <span class="material-symbols-outlined text-lg flex-shrink-0">logout</span>
-                <span class="text-sm font-medium {{ auth()->check() && auth()->user()->role === 'member' ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Logout</span>
+                <span class="text-sm font-medium {{ auth()->check() ? 'opacity-0 group-hover:opacity-100 transition-all duration-300 overflow-hidden whitespace-nowrap' : '' }}">Logout</span>
             </button>
         </form>
     </div>
@@ -329,7 +195,7 @@
 @endauth
 
 <!-- Main wrapper -->
-<div class="{{ auth()->check() ? (auth()->user()->role === 'member' ? 'md:ml-20' : 'md:ml-64') : '' }} min-h-screen flex flex-col transition-all duration-300 ease-in-out">
+<div class="{{ auth()->check() ? 'md:ml-20' : '' }} min-h-screen flex flex-col transition-all duration-300 ease-in-out">
 
     <!-- Top Bar -->
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200 shadow-sm">
