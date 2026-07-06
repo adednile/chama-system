@@ -102,70 +102,72 @@
         </section>
 
         <!-- Live EMI Preview Panel (Right Column) -->
-        <aside class="lg:col-span-5 space-y-6">
-            <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm sticky top-24">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="font-headline-md text-headline-md text-on-background">Repayment Preview</h2>
-                    <span class="material-symbols-outlined text-primary-fixed-dim scale-150">calculate</span>
-                </div>
-                <div class="space-y-8">
-                    <div class="text-center p-6 rounded-2xl bg-primary-fixed/10 border border-primary-fixed/20">
-                        <p class="text-label-md text-on-surface-variant font-medium uppercase tracking-widest mb-1">Estimated Monthly Payment</p>
-                        <h3 class="text-[40px] font-extrabold text-primary leading-none" id="preview-emi">Ksh 0.00</h3>
+        <aside class="lg:col-span-5">
+            <div class="sticky top-24 space-y-6">
+                <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="font-headline-md text-headline-md text-on-background">Repayment Preview</h2>
+                        <span class="material-symbols-outlined text-primary-fixed-dim scale-150">calculate</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="p-4 rounded-xl bg-rose-50 border border-rose-100">
-                            <p class="text-label-sm text-rose-800 font-semibold mb-1">Total Interest</p>
-                            <p class="text-headline-md font-bold text-rose-600" id="preview-interest">Ksh 0.00</p>
+                    <div class="space-y-8">
+                        <div class="text-center p-6 rounded-2xl bg-primary-fixed/10 border border-primary-fixed/20">
+                            <p class="text-label-md text-on-surface-variant font-medium uppercase tracking-widest mb-1">Estimated Monthly Payment</p>
+                            <h3 class="text-[40px] font-extrabold text-primary leading-none" id="preview-emi">Ksh 0.00</h3>
                         </div>
-                        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
-                            <p class="text-label-sm text-emerald-800 font-semibold mb-1">Total Repayment</p>
-                            <p class="text-headline-md font-bold text-emerald-600" id="preview-total">Ksh 0.00</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-rose-50 border border-rose-100">
+                                <p class="text-label-sm text-rose-800 font-semibold mb-1">Total Interest</p>
+                                <p class="text-headline-md font-bold text-rose-600" id="preview-interest">Ksh 0.00</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
+                                <p class="text-label-sm text-emerald-800 font-semibold mb-1">Total Repayment</p>
+                                <p class="text-headline-md font-bold text-emerald-600" id="preview-total">Ksh 0.00</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-6">
+                            <h4 class="text-label-md font-bold text-on-background mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                Disbursement Timeline
+                            </h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center justify-between text-sm">
+                                    <span class="text-on-surface-variant">Application Review</span>
+                                    <span class="text-on-surface font-medium">Within 24 Hours</span>
+                                </li>
+                                <li class="flex items-center justify-between text-sm">
+                                    <span class="text-on-surface-variant">Member Consensus</span>
+                                    <span class="text-on-surface font-medium">Not Required (Automated)</span>
+                                </li>
+                                <li class="flex items-center justify-between text-sm">
+                                    <span class="text-on-surface-variant">M-Pesa Payout</span>
+                                    <span class="text-on-surface font-medium">Instant after approval</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="border-t border-slate-100 pt-6">
-                        <h4 class="text-label-md font-bold text-on-background mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">schedule</span>
-                            Disbursement Timeline
-                        </h4>
-                        <ul class="space-y-3">
-                            <li class="flex items-center justify-between text-sm">
-                                <span class="text-on-surface-variant">Application Review</span>
-                                <span class="text-on-surface font-medium">Within 24 Hours</span>
-                            </li>
-                            <li class="flex items-center justify-between text-sm">
-                                <span class="text-on-surface-variant">Member Consensus</span>
-                                <span class="text-on-surface font-medium">Not Required (Automated)</span>
-                            </li>
-                            <li class="flex items-center justify-between text-sm">
-                                <span class="text-on-surface-variant">M-Pesa Payout</span>
-                                <span class="text-on-surface font-medium">Instant after approval</span>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
-            </div>
-            <!-- Dynamic Multiplier Tiers Info Card -->
-            <div class="p-6 rounded-xl border border-slate-200 bg-slate-50 space-y-4">
-                <h4 class="text-label-md font-bold text-on-background flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-base">info</span>
-                    Dynamic Borrowing Multipliers
-                </h4>
-                <p class="text-xs text-on-surface-variant leading-relaxed">
-                    Your multiplier changes dynamically based on how consistently you met the monthly contribution target of <strong>KES {{ number_format(auth()->user()->chama->contribution_target ?? 0, 2) }}</strong> in the last 6 months.
-                </p>
-                <div class="space-y-2 text-xs">
-                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.5 ? 'border-emerald-500 bg-emerald-50/50 text-emerald-900' : 'text-slate-600' }}">
-                        <span class="font-semibold">Tier A (Met target 5-6 times)</span>
-                        <span class="font-bold text-emerald-600">3.5x Limit</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.0 ? 'border-digital-blue-500 bg-digital-blue-50/50 text-digital-blue-900' : 'text-slate-600' }}">
-                        <span class="font-semibold">Tier B (Met target 3-4 times)</span>
-                        <span class="font-bold text-digital-blue-600">3.0x Limit</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 1.5 ? 'border-rose-500 bg-rose-50/50 text-rose-900' : 'text-slate-600' }}">
-                        <span class="font-semibold">Tier C (Met target 0-2 times)</span>
-                        <span class="font-bold text-rose-600">1.5x Limit</span>
+                <!-- Dynamic Multiplier Tiers Info Card -->
+                <div class="p-6 rounded-xl border border-slate-200 bg-slate-50 space-y-4">
+                    <h4 class="text-label-md font-bold text-on-background flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-base">info</span>
+                        Dynamic Borrowing Multipliers
+                    </h4>
+                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                        Your multiplier changes dynamically based on how consistently you met the monthly contribution target of <strong>KES {{ number_format(auth()->user()->chama->contribution_target ?? 0, 2) }}</strong> in the last 6 months.
+                    </p>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.5 ? 'border-emerald-500 bg-emerald-50/50 text-emerald-900' : 'text-slate-600' }}">
+                            <span class="font-semibold">Tier A (Met target 5-6 times)</span>
+                            <span class="font-bold text-emerald-600">3.5x Limit</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.0 ? 'border-digital-blue-500 bg-digital-blue-50/50 text-digital-blue-900' : 'text-slate-600' }}">
+                            <span class="font-semibold">Tier B (Met target 3-4 times)</span>
+                            <span class="font-bold text-digital-blue-600">3.0x Limit</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 1.5 ? 'border-rose-500 bg-rose-50/50 text-rose-900' : 'text-slate-600' }}">
+                            <span class="font-semibold">Tier C (Met target 0-2 times)</span>
+                            <span class="font-bold text-rose-600">1.5x Limit</span>
+                        </div>
                     </div>
                 </div>
             </div>

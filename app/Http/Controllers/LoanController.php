@@ -131,12 +131,12 @@ class LoanController extends Controller
     $loan->status = 'active';
     $loan->approved_by = Auth::id();
     $loan->approved_at = now();
-    $loan->outstanding_balance = $loan->amount;
     $loan->maturity_date = Carbon::now()->addMonths($loan->term_months);
-    $loan->save();
 
-    // Generate amortization schedule
-    $this->generateAmortizationSchedule($loan);
+    // Generate amortization schedule and return total payback amount (Principal + Interest)
+    $totalPayback = $this->generateAmortizationSchedule($loan);
+    $loan->outstanding_balance = $totalPayback;
+    $loan->save();
 
     // Record ledger entry
     $ledgerService = new LedgerService();
@@ -192,7 +192,7 @@ public function reject(Loan $loan, Request $request)
     return redirect()->back()->with('success', 'Loan application rejected.');
 }
 
-private function generateAmortizationSchedule(Loan $loan): void
+private function generateAmortizationSchedule(Loan $loan): float
 {
     $monthlyRate = ($loan->interest_rate / 100) / 12;
     $months = $loan->term_months;
@@ -207,24 +207,32 @@ private function generateAmortizationSchedule(Loan $loan): void
     
     $balance = $principal;
     $dueDate = Carbon::now()->addMonth();
+    $totalPayback = 0.0;
 
     for ($i = 1; $i <= $months; $i++) {
         $interest = $balance * $monthlyRate;
         $principalPortion = $emi - $interest;
         $balance -= $principalPortion;
 
+        $pRound = round($principalPortion, 2);
+        $iRound = round($interest, 2);
+
         AmortizationSchedule::create([
             'loan_id' => $loan->id,
             'installment_no' => $i,
             'due_date' => $dueDate->toDateString(),
-            'principal_portion' => round($principalPortion, 2),
-            'interest_portion' => round($interest, 2),
+            'principal_portion' => $pRound,
+            'interest_portion' => $iRound,
             'balance_after' => max(round($balance, 2), 0),
             'payment_status' => 'unpaid',
         ]);
 
+        $totalPayback += ($pRound + $iRound);
+
         $dueDate->addMonth();
     }
+
+    return round($totalPayback, 2);
 }
 
     public function repay(Loan $loan, Request $request, LedgerService $ledgerService)

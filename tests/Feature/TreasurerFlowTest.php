@@ -278,4 +278,62 @@ class TreasurerFlowTest extends TestCase
             'message' => 'The payment amount (KES 300.00) does not match the exact fine amount (KES 500.00). Partial payments are not allowed.',
         ]);
     }
+
+    public function test_loan_outstanding_balance_includes_interest_after_approval(): void
+    {
+        $chama = Chama::create([
+            'name' => 'Interest Chama',
+            'interest_rate_pct' => 10.00,
+        ]);
+        $treasurer = User::factory()->create([
+            'role' => 'treasurer',
+            'chama_id' => $chama->id,
+        ]);
+        $member = User::factory()->create([
+            'role' => 'member',
+            'chama_id' => $chama->id,
+        ]);
+        $loan = Loan::create([
+            'user_id' => $member->id,
+            'chama_id' => $chama->id,
+            'amount' => 10000,
+            'term_months' => 12,
+            'status' => 'pending',
+            'credit_score' => 7.0,
+            'outstanding_balance' => 10000,
+            'interest_rate' => 10.00,
+        ]);
+
+        // Approve loan
+        $response = $this->actingAs($treasurer)->post("/treasurer/loans/{$loan->id}/approve");
+        $response->assertRedirect();
+
+        $freshLoan = $loan->fresh();
+        $this->assertEquals('active', $freshLoan->status);
+        $this->assertGreaterThan(10000.00, (float) $freshLoan->outstanding_balance);
+
+        // Verify that a repayment of exactly 10000 (the principal) leaves the loan active with a balance
+        $tx = \App\Models\MappedMpesaTransaction::create([
+            'user_id' => $treasurer->id,
+            'chama_id' => $chama->id,
+            'amount' => 10000,
+            'sender' => 'M-PESA SENDER',
+            'transaction_code' => 'MPE1234567',
+            'message' => 'Confirmed. Ksh 10,000 received from SENDER.',
+            'status' => 'unmapped',
+            'payment_type' => 'loan_repayment',
+        ]);
+
+        $matchResponse = $this->actingAs($treasurer)->post("/treasurer/sms-parser/{$tx->id}/match", [
+            'user_id' => $member->id,
+            'payment_type' => 'loan_repayment',
+            'loan_id' => $freshLoan->id,
+        ]);
+
+        $matchResponse->assertStatus(200);
+        
+        $finalLoan = $freshLoan->fresh();
+        $this->assertEquals('active', $finalLoan->status);
+        $this->assertGreaterThan(0, (float) $finalLoan->outstanding_balance);
+    }
 }
