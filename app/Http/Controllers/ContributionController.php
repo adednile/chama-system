@@ -85,6 +85,16 @@ class ContributionController extends Controller
                     'message' => 'No pending fine found on your account. Please submit this as a Savings Contribution.',
                 ], 422);
             }
+
+            $parsedAmount = round((float) $parsed['amount'], 2);
+            $fineAmount = round((float) $fine->amount, 2);
+            if ($parsedAmount !== $fineAmount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "The payment amount (KES " . number_format($parsedAmount, 2) . ") does not match the exact fine amount (KES " . number_format($fineAmount, 2) . "). Partial payments are not allowed.",
+                ], 422);
+            }
+
             $fineId = $fine->id;
         }
 

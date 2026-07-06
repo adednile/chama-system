@@ -17,7 +17,7 @@
             <span class="text-2xl font-title font-black text-slate-800">Ksh {{ number_format($contributions->sum('amount'), 2) }}</span>
         </div>
         <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-digital-blue-500 relative overflow-hidden">
-            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Total Loan Capital Disbursed</span>
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Active Loans Disbursed</span>
             <span class="text-2xl font-title font-black text-digital-blue-600">Ksh {{ number_format($loans->sum('amount'), 2) }}</span>
         </div>
         <div class="premium-card rounded-2xl p-6 text-center border-t-4 border-rose-500 relative overflow-hidden">
@@ -41,7 +41,7 @@
                     <tr>
                         <th class="px-6 py-4">Chama Member</th>
                         <th class="px-6 py-4">Contributions</th>
-                        <th class="px-6 py-4">Loans Taken</th>
+                        <th class="px-6 py-4">Active Loans</th>
                         <th class="px-6 py-4">Late Fines Assessed</th>
                         <th class="px-6 py-4 text-right">Net Balance</th>
                     </tr>

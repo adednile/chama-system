@@ -65,6 +65,11 @@
                                 <span class="material-symbols-outlined text-xs" style="font-size:14px;">account_balance</span>
                                 Loan Repayment
                             </span>
+                            @elseif($tx->payment_type === 'fine_payment')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border bg-amber-50 border-amber-200 text-amber-700">
+                                <span class="material-symbols-outlined text-xs" style="font-size:14px;">gavel</span>
+                                Fine Payment
+                            </span>
                             @else
                             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700">
                                 <span class="material-symbols-outlined text-xs" style="font-size:14px;">savings</span>
@@ -106,6 +111,8 @@
                             <span class="text-slate-400 text-xs italic">
                                 @if($tx->payment_type === 'loan_repayment')
                                     Repayment → {{ $tx->user->name ?? 'User' }}
+                                @elseif($tx->payment_type === 'fine_payment')
+                                    Fine Paid → {{ $tx->user->name ?? 'User' }}
                                 @else
                                     Contribution → {{ $tx->user->name ?? 'User' }}
                                 @endif
@@ -267,6 +274,9 @@
         if (paymentType === 'loan_repayment') {
             intentEl.innerText   = '🏦 Loan Repayment';
             intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-emerald-50 border-emerald-200 text-emerald-700';
+        } else if (paymentType === 'fine_payment') {
+            intentEl.innerText   = '⚖️ Fine Payment';
+            intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-amber-50 border-amber-200 text-amber-700';
         } else {
             intentEl.innerText   = '💰 Contribution';
             intentEl.className   = 'font-bold text-xs px-2 py-0.5 rounded-full border bg-digital-blue-50 border-digital-blue-200 text-digital-blue-700';

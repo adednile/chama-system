@@ -113,11 +113,11 @@ class DemoTransactionSeeder extends Seeder
             ]
         );
 
-        // Member 5: Fines and Attendance demo
+        // Member 5: Attendance demo
         $m5 = User::updateOrCreate(
             ['email' => 'member5@example.com'],
             [
-                'name' => 'Member Five (Fines Demo)',
+                'name' => 'Member Five (Attendance Demo)',
                 'password' => Hash::make('password'),
                 'role' => 'member',
                 'chama_id' => $chama->id,
@@ -241,26 +241,7 @@ class DemoTransactionSeeder extends Seeder
             'description' => 'Unpaid penalty for late savings contribution',
         ]);
 
-        // Member 5: Fines for missed meetings
-        Fine::create([
-            'user_id' => $m5->id,
-            'chama_id' => $chama->id,
-            'amount' => 150.00,
-            'type' => 'missed_meeting',
-            'status' => 'pending',
-            'due_date' => Carbon::now()->subMonths(1)->toDateString(),
-            'description' => 'Penalty for missing Meeting 4',
-        ]);
 
-        Fine::create([
-            'user_id' => $m5->id,
-            'chama_id' => $chama->id,
-            'amount' => 150.00,
-            'type' => 'missed_meeting',
-            'status' => 'pending',
-            'due_date' => Carbon::now()->toDateString(),
-            'description' => 'Penalty for missing Meeting 5',
-        ]);
 
         // Helper to generate amortization schedules for seeded loans
         $generateSchedule = function ($loan) {

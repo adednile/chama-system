@@ -38,7 +38,7 @@
             </td>
             <td style="width: 33.33%; padding: 0;">
                 <div class="info-card">
-                    <h4>Total Loans</h4>
+                    <h4>Active Loans</h4>
                     <p>Ksh {{ number_format($loans->sum('amount'), 2) }}</p>
                 </div>
             </td>
@@ -62,7 +62,7 @@
             <tr>
                 <th>Member</th>
                 <th>Contributions</th>
-                <th>Loans Issued</th>
+                <th>Active Loans</th>
                 <th>Fines Logged</th>
                 <th>Net Balance</th>
             </tr>

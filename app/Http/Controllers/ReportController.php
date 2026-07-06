@@ -136,7 +136,7 @@ class ReportController extends Controller
 
         $users = User::where('chama_id', $chamaId)->where('role', 'member')->get();
         $contributions = Contribution::where('chama_id', $chamaId)->get();
-        $loans = Loan::where('chama_id', $chamaId)->get();
+        $loans = Loan::where('chama_id', $chamaId)->where('status', 'active')->get();
         $fines = Fine::where('chama_id', $chamaId)->get();
 
         // Calculate rolling 12-month MoM chama stats

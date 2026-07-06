@@ -310,6 +310,14 @@ class MpesaParserController extends Controller
         }
 
         $amountPaid = round((float) $tx->amount, 2);
+        $fineAmount = round((float) $fine->amount, 2);
+
+        if ($amountPaid !== $fineAmount) {
+            return response()->json([
+                'success' => false,
+                'message' => "The payment amount (KES " . number_format($amountPaid, 2) . ") does not match the exact fine amount (KES " . number_format($fineAmount, 2) . "). Partial payments are not allowed.",
+            ], 422);
+        }
 
         // Mark the fine as paid
         $fine->status = 'paid';

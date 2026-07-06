@@ -62,6 +62,11 @@ class PenaltyEngine
                         ]);
                         $user->update(['account_status' => 'overdue']);
                         $count++;
+                    } elseif ($existing->status === 'pending' && $existing->amount != $fineAmount) {
+                        $existing->update([
+                            'amount' => $fineAmount,
+                            'due_date' => now()->toDateString(),
+                        ]);
                     }
                 }
             }
@@ -109,6 +114,11 @@ class PenaltyEngine
                         ]);
                         $loan->user->update(['account_status' => 'overdue']);
                         $count++;
+                    } elseif ($existing->status === 'pending' && $existing->amount != $fineAmount) {
+                        $existing->update([
+                            'amount' => $fineAmount,
+                            'due_date' => now()->toDateString(),
+                        ]);
                     }
                 }
             }

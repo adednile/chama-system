@@ -194,10 +194,10 @@ class TreasurerFlowTest extends TestCase
             'user_id' => $member->id,
             'chama_id' => $chama->id,
             'amount' => 300.00,
-            'type' => 'missed_meeting',
+            'type' => 'late_contribution',
             'status' => 'pending',
             'due_date' => now()->addDays(5)->toDateString(),
-            'description' => 'Missed Meeting 3',
+            'description' => 'Late savings contribution',
         ]);
 
         $response = $this->actingAs($member)->postJson("/member/contributions/parse-sms", [
@@ -213,6 +213,69 @@ class TreasurerFlowTest extends TestCase
             'fine_id' => $fine->id,
             'amount' => 300.00,
             'transaction_code' => 'QXK8Y9T0R2',
+        ]);
+    }
+
+    public function test_member_cannot_parse_mismatching_fine_payment_sms(): void
+    {
+        $chama = Chama::create(['name' => 'Ruby Chama']);
+        $member = User::factory()->create(['role' => 'member', 'chama_id' => $chama->id]);
+        $fine = \App\Models\Fine::create([
+            'user_id' => $member->id,
+            'chama_id' => $chama->id,
+            'amount' => 500.00,
+            'type' => 'late_contribution',
+            'status' => 'pending',
+            'due_date' => now()->addDays(5)->toDateString(),
+            'description' => 'Late savings contribution',
+        ]);
+
+        $response = $this->actingAs($member)->postJson("/member/contributions/parse-sms", [
+            'message' => 'QXK8Y9T0R2 Confirmed. Ksh 300.00 received from SENDER NAME on 2026-06-21.',
+            'payment_type' => 'fine_payment',
+            'fine_id' => $fine->id,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+            'message' => 'The payment amount (KES 300.00) does not match the exact fine amount (KES 500.00). Partial payments are not allowed.',
+        ]);
+    }
+
+    public function test_treasurer_cannot_match_mismatching_fine_payment(): void
+    {
+        $chama = Chama::create(['name' => 'Ruby Chama']);
+        $treasurer = User::factory()->create(['role' => 'treasurer', 'chama_id' => $chama->id]);
+        $member = User::factory()->create(['role' => 'member', 'chama_id' => $chama->id]);
+        $fine = \App\Models\Fine::create([
+            'user_id' => $member->id,
+            'chama_id' => $chama->id,
+            'amount' => 500.00,
+            'type' => 'late_meeting',
+            'status' => 'pending',
+            'due_date' => now()->addDays(5)->toDateString(),
+            'description' => 'Late to Meeting 5',
+        ]);
+        $tx = MappedMpesaTransaction::create([
+            'user_id' => $treasurer->id,
+            'amount' => 300,
+            'sender' => 'MEMBER DOE 0712345678',
+            'transaction_code' => 'TXN789XYZ',
+            'message' => 'Confirmed Ksh 300 received from MEMBER DOE.',
+            'status' => 'unmapped',
+        ]);
+
+        $response = $this->actingAs($treasurer)->post("/treasurer/sms-parser/{$tx->id}/match", [
+            'user_id' => $member->id,
+            'payment_type' => 'fine_payment',
+            'fine_id' => $fine->id,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'success' => false,
+            'message' => 'The payment amount (KES 300.00) does not match the exact fine amount (KES 500.00). Partial payments are not allowed.',
         ]);
     }
 }
