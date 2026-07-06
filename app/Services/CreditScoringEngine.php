@@ -159,4 +159,47 @@ class CreditScoringEngine
         $months = $user->created_at->diffInMonths(Carbon::now());
         return min(10, ($months / 12) * 10);
     }
+
+    /**
+     * Calculate the dynamic borrowing multiplier based on target savings compliance over the last 6 months.
+     */
+    public function calculateBorrowingMultiplier(User $user): float
+    {
+        $chama = $user->chama;
+        if (!$chama || !$chama->contribution_target || $chama->contribution_target <= 0) {
+            return 3.0; // Fallback to standard 3x if target is not configured
+        }
+
+        $target = (float) $chama->contribution_target;
+
+        // Load all contributions for the last 6 months (current month + past 5 months)
+        $sixMonthsAgo = Carbon::now()->subMonths(5)->startOfMonth();
+        $contributions = $user->contributions()
+            ->where('contribution_date', '>=', $sixMonthsAgo->toDateString())
+            ->get();
+
+        $monthsMet = 0;
+        for ($i = 0; $i < 6; $i++) {
+            $monthStr = Carbon::now()->subMonths($i)->format('Y-m');
+            $monthlySum = $contributions->filter(function ($c) use ($monthStr) {
+                return Carbon::parse($c->contribution_date)->format('Y-m') === $monthStr;
+            })->sum('amount');
+
+            if ($monthlySum >= $target) {
+                $monthsMet++;
+            }
+        }
+
+        // Tiers:
+        // - Met target in 5 or 6 of the last 6 months: 3.5x
+        // - Met target in 3 or 4 of the last 6 months: 3.0x
+        // - Met target in 0 to 2 of the last 6 months: 1.5x
+        if ($monthsMet >= 5) {
+            return 3.5;
+        } elseif ($monthsMet >= 3) {
+            return 3.0;
+        } else {
+            return 1.5;
+        }
+    }
 }

@@ -15,9 +15,8 @@
             <p class="text-on-surface-variant">Apply for a low-interest credit facility based on your Chama contributions.</p>
         </div>
         <div class="flex items-center gap-3">
-            <span class="bg-primary-fixed text-on-primary-fixed px-4 py-2 rounded-full font-label-md flex items-center gap-2">
-                <span class="material-symbols-outlined text-[20px]">verified_user</span>
-                Credit Limit: Ksh {{ number_format($loanLimit ?? 0, 2) }}
+            <span class="px-4 py-2 bg-primary-fixed text-on-primary-fixed text-label-lg font-black rounded-full border border-primary-fixed-dim/30 shadow-inner">
+                Credit Limit: Ksh {{ number_format($loanLimit ?? 0, 2) }} ({{ number_format($multiplier ?? 3.0, 1) }}x)
             </span>
         </div>
     </header>
@@ -146,14 +145,28 @@
                     </div>
                 </div>
             </div>
-            <!-- Subtle Help Card -->
-            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm text-primary">
-                    <span class="material-symbols-outlined">support_agent</span>
-                </div>
-                <div>
-                    <p class="font-label-md text-on-surface font-bold">Need a higher limit?</p>
-                    <p class="text-sm text-on-surface-variant">Increase your monthly contributions to unlock larger loan facilities.</p>
+            <!-- Dynamic Multiplier Tiers Info Card -->
+            <div class="p-6 rounded-xl border border-slate-200 bg-slate-50 space-y-4">
+                <h4 class="text-label-md font-bold text-on-background flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-base">info</span>
+                    Dynamic Borrowing Multipliers
+                </h4>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                    Your multiplier changes dynamically based on how consistently you met the monthly contribution target of <strong>KES {{ number_format(auth()->user()->chama->contribution_target ?? 0, 2) }}</strong> in the last 6 months.
+                </p>
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.5 ? 'border-emerald-500 bg-emerald-50/50 text-emerald-900' : 'text-slate-600' }}">
+                        <span class="font-semibold">Tier A (Met target 5-6 times)</span>
+                        <span class="font-bold text-emerald-600">3.5x Limit</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 3.0 ? 'border-digital-blue-500 bg-digital-blue-50/50 text-digital-blue-900' : 'text-slate-600' }}">
+                        <span class="font-semibold">Tier B (Met target 3-4 times)</span>
+                        <span class="font-bold text-digital-blue-600">3.0x Limit</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2.5 rounded bg-white border border-slate-100 {{ $multiplier == 1.5 ? 'border-rose-500 bg-rose-50/50 text-rose-900' : 'text-slate-600' }}">
+                        <span class="font-semibold">Tier C (Met target 0-2 times)</span>
+                        <span class="font-bold text-rose-600">1.5x Limit</span>
+                    </div>
                 </div>
             </div>
         </aside>

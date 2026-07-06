@@ -119,7 +119,7 @@
             </div>
 
             <div class="mt-4 pt-4 border-t border-slate-100">
-                <p class="text-xs text-secondary font-medium">Based on 3x savings multiplier</p>
+                <p class="text-xs text-secondary font-medium">Based on {{ number_format($multiplier ?? 3.0, 1) }}x savings multiplier</p>
             </div>
         </div>
 

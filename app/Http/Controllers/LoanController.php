@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoanController extends Controller
 {
-    public function index()
+    public function index(CreditScoringEngine $scoringEngine)
     {
         $user  = Auth::user();
         $chama = $user->chama;
@@ -40,11 +40,12 @@ class LoanController extends Controller
             ->where('status', 'pending')
             ->sum('amount');
 
-        $loanLimit       = $savingsBalance * 3;
+        $multiplier      = $scoringEngine->calculateBorrowingMultiplier($user);
+        $loanLimit       = $savingsBalance * $multiplier;
         $canApplyForLoan = !($outstandingLoan > 0 || $unpaidFines > 0);
         $interestRate    = $chama->interest_rate_pct ?? 5.00;
 
-        return view('Member.loan-application', compact('loans', 'loanLimit', 'canApplyForLoan', 'interestRate'));
+        return view('Member.loan-application', compact('loans', 'loanLimit', 'multiplier', 'canApplyForLoan', 'interestRate'));
     }
 
     public function store(Request $request, CreditScoringEngine $scoringEngine)
@@ -62,15 +63,16 @@ class LoanController extends Controller
         return redirect()->back()->with('error', 'Loan request blocked: Your account status is Overdue. Please clear all outstanding penalties.');
     }
 
-    // Check individual limit (3x savings contributions)
+    // Check individual limit (dynamic multiplier x savings contributions)
     $savingsBalance = \App\Models\Transaction::where('user_id', $user->id)
         ->where('chama_id', $chama->id)
         ->where('type', 'contribution')
         ->sum('amount');
-    $individualLimit = $savingsBalance * 3;
+    $multiplier = $scoringEngine->calculateBorrowingMultiplier($user);
+    $individualLimit = $savingsBalance * $multiplier;
 
     if ($request->amount > $individualLimit) {
-        return redirect()->back()->with('error', 'Loan request blocked: The requested amount exceeds your individual borrowing limit of 3x your savings (Ksh ' . number_format($individualLimit, 2) . ').');
+        return redirect()->back()->with('error', 'Loan request blocked: The requested amount exceeds your individual borrowing limit of ' . $multiplier . 'x your savings (Ksh ' . number_format($individualLimit, 2) . ').');
     }
 
     // Check group cash reserves pool limit

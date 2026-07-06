@@ -57,7 +57,10 @@ class DashboardService
             ->where('status', 'pending')
             ->sum('amount');
 
-        $loanLimit = $savingsBalance * 3; // Example rule
+        $user = \App\Models\User::findOrFail($userId);
+        $scoringEngine = new \App\Services\CreditScoringEngine();
+        $multiplier = $scoringEngine->calculateBorrowingMultiplier($user);
+        $loanLimit = $savingsBalance * $multiplier;
 
         // Eligibility checks
         $canApplyForLoan = !($outstandingLoan > 0 || $unpaidFines > 0);
@@ -81,6 +84,7 @@ class DashboardService
         return [
             'savingsBalance'       => $savingsBalance,
             'loanLimit'            => $loanLimit,
+            'multiplier'           => $multiplier,
             'outstandingLoan'      => $outstandingLoan,
             'unpaidFines'          => $unpaidFines,
             'canApplyForLoan'      => $canApplyForLoan,
