@@ -16,19 +16,16 @@ class CreditScoringEngine
         $savings = $metrics['savings_consistency'] ?? 0;
         $repayment = $metrics['repayment_history'] ?? 0;
         $attendance = $metrics['attendance'] ?? 0;
-        $duration = $metrics['membership_duration'] ?? 0;
 
         $weights = [
             'savings' => 0.4,
-            'repayment' => 0.3,
+            'repayment' => 0.4,
             'attendance' => 0.2,
-            'duration' => 0.1,
         ];
 
         $score = ($savings * $weights['savings'])
             + ($repayment * $weights['repayment'])
-            + ($attendance * $weights['attendance'])
-            + ($duration * $weights['duration']);
+            + ($attendance * $weights['attendance']);
 
         return (int) round($score);
     }
@@ -45,15 +42,13 @@ class CreditScoringEngine
         $savings = $this->savingsConsistency($user);
         $repayment = $this->repaymentHistory($user);
         $attendance = $this->attendanceScore($user);
-        $duration = $this->membershipDuration($user);
 
         // Apply weights (can be configured per Chama, but we use defaults)
         $weights = $this->getWeights($user->chama);
 
         $score = ($savings * $weights['savings'])
             + ($repayment * $weights['repayment'])
-            + ($attendance * $weights['attendance'])
-            + ($duration * $weights['duration']);
+            + ($attendance * $weights['attendance']);
 
         return round($score, 1);
     }
@@ -66,18 +61,16 @@ class CreditScoringEngine
         if ($chama) {
             return [
                 'savings' => $chama->savings_weight ?? 0.4,
-                'repayment' => $chama->repayment_weight ?? 0.3,
+                'repayment' => $chama->repayment_weight ?? 0.4,
                 'attendance' => $chama->attendance_weight ?? 0.2,
-                'duration' => 0.1, // can also be made configurable
             ];
         }
 
         // Default weights
         return [
             'savings' => 0.4,
-            'repayment' => 0.3,
+            'repayment' => 0.4,
             'attendance' => 0.2,
-            'duration' => 0.1,
         ];
     }
 
@@ -151,14 +144,7 @@ class CreditScoringEngine
         return round(($attended / $totalMeetings) * 10, 1);
     }
 
-    /**
-     * Membership duration: months as member, capped at 10
-     */
-    private function membershipDuration(User $user): float
-    {
-        $months = $user->created_at->diffInMonths(Carbon::now());
-        return min(10, ($months / 12) * 10);
-    }
+
 
     /**
      * Calculate the dynamic borrowing multiplier based on target savings compliance over the last 6 months.

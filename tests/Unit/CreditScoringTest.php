@@ -15,7 +15,6 @@ class CreditScoringTest extends TestCase
             'savings_consistency' => 8,
             'repayment_history' => 7,
             'attendance' => 9,
-            'membership_duration' => 6,
         ]);
 
         $this->assertSame(8, $score);
