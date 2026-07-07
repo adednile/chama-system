@@ -141,10 +141,8 @@ class MeetingController extends Controller
         $user = Auth::user();
         $chama = $user->chama;
 
-        $meetingsCount = Meeting::where('chama_id', $chama->id)
-            ->where('meeting_date', '>=', $user->created_at->toDateString())
-            ->count();
         $attendances = $user->attendances()->with('meeting')->get();
+        $meetingsCount = $attendances->count();
         $attendedCount = $attendances->where('present', true)->count();
 
         // Calculate attendance reliability %
@@ -186,9 +184,7 @@ class MeetingController extends Controller
         // Calculate rank in Chama based on attendance rate
         $allMembers = $chama->users()->where('role', 'member')->get();
         $rankedMembers = $allMembers->map(function ($member) use ($chama) {
-            $mCount = Meeting::where('chama_id', $chama->id)
-                ->where('meeting_date', '>=', $member->created_at->toDateString())
-                ->count();
+            $mCount = $member->attendances()->count();
             $attended = $member->attendances()->where('present', true)->count();
             $rate = $mCount > 0 ? ($attended / $mCount) * 100 : 100;
             return [

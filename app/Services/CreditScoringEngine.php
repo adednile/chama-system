@@ -131,10 +131,8 @@ class CreditScoringEngine
      */
     private function attendanceScore(User $user): float
     {
-        // Count total meetings for this Chama on or after user registration date
-        $totalMeetings = Meeting::where('chama_id', $user->chama_id)
-            ->where('meeting_date', '>=', $user->created_at->toDateString())
-            ->count();
+        // Count total meetings for which this user has an attendance record
+        $totalMeetings = $user->attendances()->count();
 
         if ($totalMeetings === 0) {
             return 10; // No meetings recorded – assume perfect attendance
