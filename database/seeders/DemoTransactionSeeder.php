@@ -380,6 +380,16 @@ class DemoTransactionSeeder extends Seeder
 
         // 9. Seed the generic double-entry ledger transactions to align ledger stats
         // We record chama cash pool starting balance (Treasurer injection / starting balance)
+        Contribution::create([
+            'user_id' => $treasurer->id,
+            'chama_id' => $chama->id,
+            'amount' => 100000.00,
+            'contribution_date' => Carbon::now()->subMonths(6)->toDateString(),
+            'source' => 'manual',
+            'reference' => 'INITIAL-POOL',
+            'notes' => 'Opening balance initialization',
+        ]);
+
         Transaction::create([
             'chama_id' => $chama->id,
             'type' => 'contribution',
@@ -433,18 +443,18 @@ class DemoTransactionSeeder extends Seeder
         // Loan M1 (15000)
         Transaction::create([
             'chama_id' => $chama->id,
-            'type' => 'loan_disbursal',
+            'type' => 'loan_disbursement',
             'user_id' => $m1->id,
-            'amount' => -15000.00,
+            'amount' => 15000.00,
             'posted_at' => Carbon::now()->subMonths(4)->toDateString(),
             'description' => 'Disbursed Loan M1',
         ]);
         // Loan M2 (10000)
         Transaction::create([
             'chama_id' => $chama->id,
-            'type' => 'loan_disbursal',
+            'type' => 'loan_disbursement',
             'user_id' => $m2->id,
-            'amount' => -10000.00,
+            'amount' => 10000.00,
             'posted_at' => Carbon::now()->subMonths(3)->toDateString(),
             'description' => 'Disbursed Loan M2',
         ]);
@@ -453,7 +463,7 @@ class DemoTransactionSeeder extends Seeder
         // M1 repayments (15750 total)
         Transaction::create([
             'chama_id' => $chama->id,
-            'type' => 'loan_repayment',
+            'type' => 'repayment',
             'user_id' => $m1->id,
             'amount' => 15750.00,
             'posted_at' => Carbon::now()->subMonths(1)->toDateString(),
@@ -463,7 +473,7 @@ class DemoTransactionSeeder extends Seeder
         // M2 repayments (3500 total)
         Transaction::create([
             'chama_id' => $chama->id,
-            'type' => 'loan_repayment',
+            'type' => 'repayment',
             'user_id' => $m2->id,
             'amount' => 3500.00,
             'posted_at' => Carbon::now()->subMonths(2)->toDateString(),

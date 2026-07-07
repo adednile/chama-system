@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ChamaSeeder::class,
             UserSeeder::class,
             DemoTransactionSeeder::class,
+            DemoScenariosSeeder::class,
         ]);
     }
 }

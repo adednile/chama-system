@@ -84,7 +84,7 @@ class LoanController extends Controller
         ->where('status', 'paid')
         ->sum('amount');
     $loansDisbursed = \App\Models\Loan::where('chama_id', $chama->id)
-        ->whereIn('status', ['active', 'completed'])
+        ->whereIn('status', ['active', 'completed', 'overdue'])
         ->sum('amount');
 
     $availableCashPool = ($contributions + $repayments + $finesPaid) - $loansDisbursed;
@@ -171,7 +171,7 @@ class LoanController extends Controller
         ->where('status', 'paid')
         ->sum('amount');
     $loansDisbursed = \App\Models\Loan::where('chama_id', $chamaId)
-        ->whereIn('status', ['active', 'completed'])
+        ->whereIn('status', ['active', 'completed', 'overdue'])
         ->sum('amount');
 
     $availableCashPool = ($contributions + $repayments + $finesPaid) - $loansDisbursed;

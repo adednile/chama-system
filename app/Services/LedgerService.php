@@ -58,7 +58,7 @@ class LedgerService
 
         // Total cash outflows: disbursed loans
         $loansDisbursed = \App\Models\Loan::where('chama_id', $chamaId)
-            ->whereIn('status', ['active', 'completed'])
+            ->whereIn('status', ['active', 'completed', 'overdue'])
             ->sum('amount');
 
         $computedCashPool = $inflows - $loansDisbursed;
