@@ -135,7 +135,11 @@ class ReportController extends Controller
         $chamaId = Auth::user()->chama_id;
 
         $users = User::where('chama_id', $chamaId)->where('role', 'member')->get();
-        $contributions = Contribution::where('chama_id', $chamaId)->get();
+        $contributions = Contribution::where('chama_id', $chamaId)
+            ->whereHas('user', function ($q) {
+                $q->where('role', 'member');
+            })
+            ->get();
         $loans = Loan::where('chama_id', $chamaId)->where('status', 'active')->get();
         $fines = Fine::where('chama_id', $chamaId)->get();
 

@@ -417,24 +417,5 @@ class DemoScenariosSeeder extends Seeder
             'payment_type' => 'contribution',
         ]);
 
-        // 11. Initial Pool Deposit by Treasurer (Opening Pool balance of Ksh 100,000)
-        Contribution::create([
-            'user_id' => $treasurer->id,
-            'chama_id' => $chama->id,
-            'amount' => 100000.00,
-            'contribution_date' => Carbon::now()->subMonths(6)->toDateString(),
-            'source' => 'manual',
-            'reference' => 'INITIAL-POOL',
-            'notes' => 'Opening balance initialization',
-        ]);
-
-        Transaction::create([
-            'chama_id' => $chama->id,
-            'type' => 'contribution',
-            'user_id' => $treasurer->id,
-            'amount' => 100000.00,
-            'posted_at' => Carbon::now()->subMonths(6)->toDateString(),
-            'description' => 'Opening balance initialization',
-        ]);
     }
 }

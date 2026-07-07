@@ -25,7 +25,11 @@ class DashboardService
         $averageScore = $memberCount > 0 ? $totalScore / $memberCount : 0;
 
         return [
-            'totalSavings'       => Contribution::where('chama_id', $chamaId)->sum('amount'),
+            'totalSavings'       => Contribution::where('chama_id', $chamaId)
+                ->whereHas('user', function ($q) {
+                    $q->where('role', 'member');
+                })
+                ->sum('amount'),
             'activeLoans'        => Loan::where('chama_id', $chamaId)->whereIn('status', ['active', 'overdue'])->sum('outstanding_balance'),
             'activeLoansCount'   => Loan::where('chama_id', $chamaId)->whereIn('status', ['active', 'overdue'])->count(),
             'pendingApplications' => Loan::where('chama_id', $chamaId)->where('status', 'pending')->count(),
