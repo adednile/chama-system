@@ -51,9 +51,9 @@
         </tr>
     </table>
 
-    <!-- Month-on-Month Growth Trend Chart -->
+    <!-- Month-on-Month Contributions vs. Loans Disbursed Chart -->
     <div class="chart-container">
-        <img src="{{ $groupChartUrl }}" style="width: 100%; max-width: 580px; height: auto;" alt="Chama Performance Growth Chart" />
+        <img src="{{ $groupChartUrl }}" style="width: 100%; max-width: 580px; height: auto;" alt="Chama Monthly Contributions vs. Loans Disbursed" />
     </div>
 
     <h3>Chama Member Summary</h3>

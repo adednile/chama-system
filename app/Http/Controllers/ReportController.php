@@ -150,7 +150,7 @@ class ReportController extends Controller
             $chamaMonthKeys[$date->format('Y-m')] = [
                 'label' => $date->format('M Y'),
                 'contrib' => 0,
-                'fines' => 0,
+                'loaned' => 0,
             ];
         }
         foreach ($contributions as $contrib) {
@@ -159,54 +159,48 @@ class ReportController extends Controller
                 $chamaMonthKeys[$key]['contrib'] += $contrib->amount;
             }
         }
-        foreach ($fines as $fine) {
-            $key = substr($fine->due_date, 0, 7);
+        
+        $allLoans = Loan::where('chama_id', $chamaId)
+            ->whereNotNull('approved_at')
+            ->get();
+        foreach ($allLoans as $loan) {
+            $key = $loan->approved_at->format('Y-m');
             if (isset($chamaMonthKeys[$key])) {
-                $chamaMonthKeys[$key]['fines'] += $fine->amount;
+                $chamaMonthKeys[$key]['loaned'] += $loan->amount;
             }
         }
         
         $chamaMonths = [];
         $chamaMonthlyContribs = [];
-        $chamaCumulativeValue = [];
-        $chamaCumulative = 0;
+        $chamaMonthlyLoans = [];
         foreach ($chamaMonthKeys as $key => $values) {
             $chamaMonths[] = $values['label'];
             $chamaMonthlyContribs[] = $values['contrib'];
-            $chamaCumulative += ($values['contrib'] + $values['fines']);
-            $chamaCumulativeValue[] = $chamaCumulative;
+            $chamaMonthlyLoans[] = $values['loaned'];
         }
 
-        // Configure Dual-Axis QuickChart URL for Group Report
+        // Configure Side-by-Side Bar Chart for Group Report (Contributions vs. Loans Disbursed)
         $chamaChartConfig = [
             'type' => 'bar',
             'data' => [
                 'labels' => $chamaMonths,
                 'datasets' => [
                     [
-                        'type' => 'bar',
-                        'label' => 'Monthly Volume (Left Axis)',
+                        'label' => 'Total Contributed (Ksh)',
                         'data' => $chamaMonthlyContribs,
-                        'backgroundColor' => 'rgba(86, 94, 116, 0.6)',
-                        'yAxisID' => 'y-axis-1'
+                        'backgroundColor' => 'rgba(0, 82, 204, 0.85)',
                     ],
                     [
-                        'type' => 'line',
-                        'label' => 'Cumulative Value (Right Axis)',
-                        'data' => $chamaCumulativeValue,
-                        'borderColor' => '#0052cc',
-                        'borderWidth' => 2.5,
-                        'fill' => false,
-                        'pointRadius' => 4,
-                        'pointBackgroundColor' => '#0052cc',
-                        'yAxisID' => 'y-axis-2'
+                        'label' => 'Total Disbursed (Ksh)',
+                        'data' => $chamaMonthlyLoans,
+                        'backgroundColor' => 'rgba(245, 48, 3, 0.85)',
                     ]
                 ]
             ],
             'options' => [
                 'title' => [
                     'display' => true,
-                    'text' => 'Chama MoM Growth & Contribution Trends'
+                    'text' => 'Chama Monthly Contributions vs. Loans Disbursed'
                 ],
                 'legend' => [
                     'position' => 'bottom'
@@ -214,25 +208,15 @@ class ReportController extends Controller
                 'scales' => [
                     'yAxes' => [
                         [
-                            'id' => 'y-axis-1',
-                            'position' => 'left',
+                            'ticks' => [
+                                'beginAtZero' => true
+                            ],
                             'scaleLabel' => [
                                 'display' => true,
-                                'labelString' => 'Monthly Volume (Ksh)'
+                                'labelString' => 'Amount (Ksh)'
                             ],
                             'gridLines' => [
                                 'color' => '#E0E0E0'
-                            ]
-                        ],
-                        [
-                            'id' => 'y-axis-2',
-                            'position' => 'right',
-                            'scaleLabel' => [
-                                'display' => true,
-                                'labelString' => 'Cumulative Value (Ksh)'
-                            ],
-                            'gridLines' => [
-                                'display' => false
                             ]
                         ]
                     ]

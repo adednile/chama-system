@@ -36,6 +36,8 @@ class MpesaSMSParser
             $sender = $senderMatches[1];
         } elseif (preg_match('/from\s+([A-Za-z0-9\s.-]+?)(?:\.\s+Ref|\s+Ref|\.|$)/i', $normalized, $senderMatches)) {
             $sender = $senderMatches[1];
+        } elseif (preg_match('/(?:sent to|paid to)\s+([A-Za-z0-9\s.-]+?)(?:\s+for\s+account|\s+on|\.|$)/i', $normalized, $senderMatches)) {
+            $sender = 'To: ' . trim($senderMatches[1]);
         }
 
         $date = null;
