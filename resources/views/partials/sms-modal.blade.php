@@ -287,17 +287,20 @@
             },
 
             getFromName() {
-                if (!this.parsedData.sender) return '—';
-                if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
-                    return '{{ auth()->user()->role === "treasurer" ? "Chama Member" : auth()->user()->name }}';
+                if (this.parsedData.sender) {
+                    if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
+                        return '{{ auth()->user()->role === "treasurer" ? "Chama Member" : auth()->user()->name }}';
+                    }
+                    return this.parsedData.sender;
                 }
-                return this.parsedData.sender;
+                return '{{ auth()->user()->role === "treasurer" ? "Chama Member" : auth()->user()->name }}';
             },
 
             getToName() {
-                if (!this.parsedData.sender) return '—';
-                if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
-                    return this.parsedData.sender.replace(/^to:\s*/i, '');
+                if (this.parsedData.sender) {
+                    if (this.parsedData.sender.toLowerCase().startsWith('to:')) {
+                        return this.parsedData.sender.replace(/^to:\s*/i, '');
+                    }
                 }
                 return '{{ auth()->user()->chama->name ?? "Chama" }}';
             },

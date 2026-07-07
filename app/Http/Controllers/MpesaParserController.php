@@ -232,6 +232,15 @@ class MpesaParserController extends Controller
         }
 
         $amountPaid = round((float) $tx->amount, 2);
+        $outstanding = round((float) $loan->outstanding_balance, 2);
+
+        $repaymentApplied = $amountPaid;
+        $surplus = 0.0;
+
+        if ($amountPaid > $outstanding) {
+            $repaymentApplied = $outstanding;
+            $surplus = round($amountPaid - $outstanding, 2);
+        }
 
         // Find the earliest unpaid installment
         $schedule = $loan->amortizationSchedule()
@@ -250,14 +259,14 @@ class MpesaParserController extends Controller
         // Record the repayment
         Repayment::create([
             'loan_id'           => $loan->id,
-            'repayment_amount'  => $amountPaid,
+            'repayment_amount'  => $repaymentApplied,
             'repayment_date'    => now()->toDateString(),
-            'remaining_balance' => max($loan->outstanding_balance - $amountPaid, 0),
+            'remaining_balance' => max($loan->outstanding_balance - $repaymentApplied, 0),
             'is_late'           => $isLate,
         ]);
 
         // Reduce loan outstanding balance
-        $loan->outstanding_balance = max($loan->outstanding_balance - $amountPaid, 0);
+        $loan->outstanding_balance = max($loan->outstanding_balance - $repaymentApplied, 0);
         if ($loan->outstanding_balance <= 0) {
             $loan->status    = 'completed';
             $loan->repaid_at = now();
@@ -268,10 +277,34 @@ class MpesaParserController extends Controller
             'repayment',
             $user->id,
             $user->chama_id,
-            $amountPaid,
+            $repaymentApplied,
             $isLate ? 'Loan repayment via M-Pesa SMS (LATE)' : 'Loan repayment via M-Pesa SMS',
             $tx->transaction_code
         );
+
+        $surplusNote = '';
+        if ($surplus > 0) {
+            Contribution::create([
+                'user_id'           => $user->id,
+                'chama_id'          => $user->chama_id,
+                'amount'            => $surplus,
+                'contribution_date' => now()->toDateString(),
+                'source'            => 'mpesa',
+                'reference'         => $tx->transaction_code . '-SURPLUS',
+                'notes'             => 'Loan repayment surplus from transaction ' . $tx->transaction_code,
+            ]);
+
+            $ledgerService->record(
+                'contribution',
+                $user->id,
+                $user->chama_id,
+                $surplus,
+                'Savings contribution via loan repayment surplus',
+                $tx->transaction_code . '-SURPLUS'
+            );
+
+            $surplusNote = " Surplus of KES " . number_format($surplus, 2) . " redirected as savings contribution.";
+        }
 
         $tx->update([
             'status'       => 'mapped',
@@ -284,7 +317,7 @@ class MpesaParserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "KES " . number_format($amountPaid, 2) . " applied as loan repayment for {$user->name}.{$statusNote}",
+            'message' => "KES " . number_format($repaymentApplied, 2) . " applied as loan repayment for {$user->name}.{$statusNote}{$surplusNote}",
         ]);
     }
 
