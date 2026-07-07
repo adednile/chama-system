@@ -40,7 +40,6 @@
                         <th class="px-6 py-4">Assessed Amount</th>
                         <th class="px-6 py-4">Due Date</th>
                         <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4 text-right">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-600">
@@ -60,22 +59,10 @@
                                 {{ ucfirst($fine->status) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            @if($fine->status !== 'paid')
-                                <form action="{{ route('treasurer.penalties.markPaid', $fine) }}" method="POST" class="inline" onsubmit="return confirm('Confirm payment of this penalty?');">
-                                    @csrf
-                                    <button type="submit" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-sm">
-                                        Mark Paid
-                                    </button>
-                                </form>
-                            @else
-                                <span class="text-slate-400 text-xs">—</span>
-                            @endif
-                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-slate-400">
+                        <td colspan="5" class="px-6 py-8 text-center text-slate-400">
                             <span class="material-symbols-outlined text-3xl block mb-2 opacity-50">gavel</span>
                             No penalty records found.
                         </td>
