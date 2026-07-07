@@ -51,7 +51,14 @@
                             {{ $tx->created_at->format('M d, Y H:i') }}
                         </td>
                         <td class="px-gutter py-4 font-label-md text-label-md font-bold text-on-surface">
-                            {{ $tx->sender ?? '—' }}
+                            @if($tx->status === 'mapped' && $tx->user)
+                                <div class="flex flex-col">
+                                    <span class="text-on-surface font-bold">{{ $tx->user->name }}</span>
+                                    <span class="text-[11px] text-secondary font-normal block mt-0.5">SMS: {{ $tx->sender }}</span>
+                                </div>
+                            @else
+                                {{ $tx->sender ?? '—' }}
+                            @endif
                         </td>
                         <td class="px-gutter py-4 font-label-md text-label-md font-mono text-primary font-semibold">
                             {{ $tx->transaction_code ?? '—' }}
