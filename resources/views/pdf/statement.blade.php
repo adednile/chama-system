@@ -16,7 +16,6 @@
         .table th { background: #0052cc; color: #ffffff; font-weight: bold; font-size: 11px; text-transform: uppercase; }
         .table td { color: #334155; }
         .table tr:nth-child(even) { background: #f8fafc; }
-        .chart-container { text-align: center; margin: 25px 0; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; }
         .footer { text-align: center; margin-top: 40px; font-size: 10px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 12px; }
     </style>
 </head>
@@ -51,11 +50,6 @@
             </td>
         </tr>
     </table>
-
-    <!-- Cumulative Savings Velocity Chart -->
-    <div class="chart-container">
-        <img src="{{ $savingsChartUrl }}" style="width: 100%; max-width: 580px; height: auto;" alt="Historical Growth and Performance Tracking" />
-    </div>
 
     <h3>Transaction Ledger</h3>
     <table class="table">
