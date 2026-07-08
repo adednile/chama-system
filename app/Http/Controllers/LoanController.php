@@ -194,28 +194,34 @@ public function reject(Loan $loan, Request $request)
 
 private function generateAmortizationSchedule(Loan $loan): float
 {
-    $monthlyRate = ($loan->interest_rate / 100) / 12;
     $months = $loan->term_months;
     $principal = $loan->amount;
+    $ratePct = $loan->interest_rate;
     
-    // Calculate EMI (Equated Monthly Installment)
-    if ($monthlyRate > 0) {
-        $emi = $principal * $monthlyRate * pow(1 + $monthlyRate, $months) / (pow(1 + $monthlyRate, $months) - 1);
-    } else {
-        $emi = $principal / $months;
-    }
+    // Flat rate calculation
+    // Monthly Interest = Principal * (Rate / 100) / 12
+    $monthlyInterest = round(($principal * ($ratePct / 100)) / 12, 2);
+    // Base Monthly Principal = round(Principal / Months, 2)
+    $monthlyPrincipal = round($principal / $months, 2);
     
+    $accumulatedPrincipal = 0.0;
     $balance = $principal;
     $dueDate = Carbon::now()->addMonth();
     $totalPayback = 0.0;
 
     for ($i = 1; $i <= $months; $i++) {
-        $interest = $balance * $monthlyRate;
-        $principalPortion = $emi - $interest;
+        // Reconcile rounding residuals on the final month
+        if ($i == $months) {
+            $principalPortion = round($principal - $accumulatedPrincipal, 2);
+        } else {
+            $principalPortion = $monthlyPrincipal;
+        }
+
+        $accumulatedPrincipal += $principalPortion;
         $balance -= $principalPortion;
 
         $pRound = round($principalPortion, 2);
-        $iRound = round($interest, 2);
+        $iRound = $monthlyInterest;
 
         AmortizationSchedule::create([
             'loan_id' => $loan->id,

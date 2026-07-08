@@ -266,19 +266,19 @@
             return;
         }
 
-        const monthlyRate = ANNUAL_RATE / 12;
-        
         let emi = 0;
         let totalRepayment = 0;
         let totalInterest = 0;
 
-        if (monthlyRate === 0) {
+        if (ANNUAL_RATE === 0) {
             emi = P / N;
             totalRepayment = P;
             totalInterest = 0;
         } else {
-            // Reducing balance EMI formula: P * r * (1+r)^N / ((1+r)^N - 1)
-            emi = P * monthlyRate * Math.pow(1 + monthlyRate, N) / (Math.pow(1 + monthlyRate, N) - 1);
+            // Flat rate calculation: Interest is constant on the full principal every month
+            const monthlyInterest = P * ANNUAL_RATE / 12;
+            const monthlyPrincipal = P / N;
+            emi = monthlyPrincipal + monthlyInterest;
             totalRepayment = emi * N;
             totalInterest = totalRepayment - P;
         }
