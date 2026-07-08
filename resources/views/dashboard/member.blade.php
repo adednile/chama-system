@@ -76,10 +76,6 @@
                     <div class="p-2 rounded-lg bg-digital-blue-50 text-digital-blue-600">
                         <span class="material-symbols-outlined">savings</span>
                     </div>
-                    <!-- Mock trend indicator -->
-                    <span class="text-emerald-600 text-label-sm font-bold bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">trending_up</span> +2.4%
-                    </span>
                 </div>
                 <p class="text-label-md text-secondary font-medium">Current Savings Balance</p>
                 <p class="font-headline-lg text-headline-lg text-on-surface mt-1">KES {{ number_format($savingsBalance ?? 0, 2) }}</p>
