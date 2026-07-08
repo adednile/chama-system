@@ -127,19 +127,28 @@ class CreditScoringEngine
     }
 
     /**
-     * Meeting attendance: % of meetings attended
+     * Meeting attendance: % of meetings attended (excluding future scheduled meetings)
      */
     private function attendanceScore(User $user): float
     {
-        // Count total meetings for which this user has an attendance record
-        $totalMeetings = $user->attendances()->count();
+        // Count total meetings for which this user has an attendance record (excluding future meetings)
+        $totalMeetings = $user->attendances()
+            ->whereHas('meeting', function ($q) {
+                $q->where('meeting_date', '<=', now()->toDateString());
+            })
+            ->count();
 
         if ($totalMeetings === 0) {
             return 10; // No meetings recorded – assume perfect attendance
         }
 
         // Count how many meetings the user attended (present = true)
-        $attended = $user->attendances()->where('present', true)->count();
+        $attended = $user->attendances()
+            ->whereHas('meeting', function ($q) {
+                $q->where('meeting_date', '<=', now()->toDateString());
+            })
+            ->where('present', true)
+            ->count();
 
         return round(($attended / $totalMeetings) * 10, 1);
     }

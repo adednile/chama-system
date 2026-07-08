@@ -254,4 +254,61 @@ class MeetingAttendanceTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('reliability', 100.0);
     }
+
+    public function test_future_meetings_are_ignored_in_attendance_scores_and_metrics(): void
+    {
+        // 1. Create a past meeting and mark member1 and member2 present
+        $pastMeeting = Meeting::create([
+            'chama_id' => $this->chama->id,
+            'meeting_date' => now()->subDays(1)->toDateString(),
+            'meeting_type' => 'regular',
+        ]);
+        
+        Attendance::create([
+            'meeting_id' => $pastMeeting->id,
+            'user_id' => $this->member1->id,
+            'present' => true,
+        ]);
+        Attendance::create([
+            'meeting_id' => $pastMeeting->id,
+            'user_id' => $this->member2->id,
+            'present' => true,
+        ]);
+
+        // 2. Create a future scheduled meeting with pre-populated present = false
+        $futureMeeting = Meeting::create([
+            'chama_id' => $this->chama->id,
+            'meeting_date' => now()->addDays(5)->toDateString(),
+            'meeting_type' => 'regular',
+        ]);
+        Attendance::create([
+            'meeting_id' => $futureMeeting->id,
+            'user_id' => $this->member1->id,
+            'present' => false,
+        ]);
+        Attendance::create([
+            'meeting_id' => $futureMeeting->id,
+            'user_id' => $this->member2->id,
+            'present' => false,
+        ]);
+
+        // 3. Verify CreditScoringEngine's attendanceScore is 10.0 (perfect) rather than 5.0 (50%)
+        $engine = new CreditScoringEngine();
+        $refClass = new \ReflectionClass($engine);
+        $method = $refClass->getMethod('attendanceScore');
+        $method->setAccessible(true);
+        $attendanceScore = $method->invoke($engine, $this->member1);
+        $this->assertEquals(10.0, $attendanceScore);
+
+        // 4. Verify member's attendance index shows reliability = 100.0%
+        $response = $this->actingAs($this->member1)->get('/member/attendance');
+        $response->assertStatus(200);
+        $response->assertViewHas('reliability', 100.0);
+        $response->assertViewHas('meetingsCount', 1); // Only 1 occurred meeting
+
+        // 5. Verify treasurer meetings index group average attendance is 100.0% (from only occurred meetings)
+        $response = $this->actingAs($this->treasurer)->get('/treasurer/meetings');
+        $response->assertStatus(200);
+        $response->assertViewHas('averageAttendance', 100.0);
+    }
 }

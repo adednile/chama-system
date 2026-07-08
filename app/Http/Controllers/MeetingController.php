@@ -24,7 +24,7 @@ class MeetingController extends Controller
         $totalMeetingsWithAttendance = 0;
         $sumAttendancePercentages = 0;
 
-        foreach ($chama->meetings as $meeting) {
+        foreach ($chama->meetings()->where('meeting_date', '<=', now()->toDateString())->get() as $meeting) {
             $totalAttendanceRecords = $meeting->attendances()->count();
             if ($totalAttendanceRecords > 0 && $totalMembers > 0) {
                 $presentCount = $meeting->attendances()->where('present', true)->count();
@@ -141,7 +141,12 @@ class MeetingController extends Controller
         $user = Auth::user();
         $chama = $user->chama;
 
-        $attendances = $user->attendances()->with('meeting')->get();
+        $attendances = $user->attendances()
+            ->whereHas('meeting', function ($q) {
+                $q->where('meeting_date', '<=', now()->toDateString());
+            })
+            ->with('meeting')
+            ->get();
         $meetingsCount = $attendances->count();
         $attendedCount = $attendances->where('present', true)->count();
 
@@ -181,11 +186,19 @@ class MeetingController extends Controller
             }
         }
 
-        // Calculate rank in Chama based on attendance rate
         $allMembers = $chama->users()->where('role', 'member')->get();
         $rankedMembers = $allMembers->map(function ($member) use ($chama) {
-            $mCount = $member->attendances()->count();
-            $attended = $member->attendances()->where('present', true)->count();
+            $mCount = $member->attendances()
+                ->whereHas('meeting', function ($q) {
+                    $q->where('meeting_date', '<=', now()->toDateString());
+                })
+                ->count();
+            $attended = $member->attendances()
+                ->whereHas('meeting', function ($q) {
+                    $q->where('meeting_date', '<=', now()->toDateString());
+                })
+                ->where('present', true)
+                ->count();
             $rate = $mCount > 0 ? ($attended / $mCount) * 100 : 100;
             return [
                 'user_id' => $member->id,
@@ -265,6 +278,7 @@ class MeetingController extends Controller
 
         $meetings = $chama->meetings()
             ->whereBetween('meeting_date', [$financialYearStart, $financialYearEnd])
+            ->where('meeting_date', '<=', now()->toDateString())
             ->orderBy('meeting_date', 'asc')
             ->get();
 
