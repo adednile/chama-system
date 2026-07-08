@@ -67,7 +67,7 @@
                     <td>{{ $tx->created_at->format('d/m/Y') }}</td>
                     <td>{{ ucfirst($tx->type) }}</td>
                     <td>{{ $tx->description ?? '—' }}</td>
-                    <td>{{ $tx->type === 'credit' ? '+' : '-' }} Ksh {{ number_format($tx->amount, 2) }}</td>
+                    <td>{{ in_array($tx->type, ['contribution', 'repayment', 'fine_paid', 'credit']) ? '+' : '-' }} Ksh {{ number_format($tx->amount, 2) }}</td>
                 </tr>
             @empty
                 <tr><td colspan="4" style="text-align: center; color: #64748b;">No transactions recorded.</td></tr>
